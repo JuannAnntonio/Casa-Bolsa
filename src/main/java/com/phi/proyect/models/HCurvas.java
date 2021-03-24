@@ -2,22 +2,21 @@ package com.phi.proyect.models;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="h_curvas")
-public class HCurvas implements Serializable{
+@Table(name = "h_curvas")
+public class HCurvas implements Serializable {
+
+	private static final long serialVersionUID = 8700587300419689272L;
 
 	@Id
-	@JoinColumn(name="Cd_Curva")
+	@JoinColumn(name = "Cd_Curva")
 	private Integer CdCurva;
-	
+
 	private String FhDate;
 	private Double N1;
 	private Double N2;
@@ -47,7 +46,9 @@ public class HCurvas implements Serializable{
 	private Double N26;
 	private Double N27;
 	private Double N28;
-	
+	//TODO: Falta completar hasta la columna N107
+
+
 	public HCurvas() {
 		super();
 	}
@@ -300,8 +301,6 @@ public class HCurvas implements Serializable{
 				+ N16 + ", N17=" + N17 + ", N18=" + N18 + ", N19=" + N19 + ", N20=" + N20 + ", N21=" + N21 + ", N22="
 				+ N22 + ", N23=" + N23 + ", N24=" + N24 + ", N25=" + N25 + ", N26=" + N26 + ", N27=" + N27 + ", N28="
 				+ N28 + "]";
-	}	
-	
-	
-	
+	}
+
 }

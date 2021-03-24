@@ -8,6 +8,24 @@ import com.phi.proyect.models.ValuacionHistoricoVar;
 
 public interface ValuacionHistoricoRepository extends JpaRepository<ValuacionHistoricoVar, DatosVarId> {
 
+	@Procedure("Insertaswap_uno")
+	void insertaSwapUno(String cdTransaccion, Integer cdCurva, String ldFecha);
+	
+	@Procedure("Insertaswap_dos")
+	void insertaSwapDos(Integer cdCurva, String ldFecha);
+	
+	@Procedure("Insertaswap_tres")
+	void insertaSwapTres(Integer cdDescuento, String ldFecha);
+	
+	@Procedure("InsertaSwap_cuatro")
+	void insertaSwapCuatro(Integer cdCurva, String ldFecha);
+	
+	@Procedure("InsertaSwap_cinco")
+	void insertaSwapCinco(Integer cdDescuento, String ldFecha);
+	
+	@Procedure("InsertaValSwap")
+	void insertaValSwap();
+	
 	@Procedure("InsertaValRevisables")
 	void insertaValRevisables(String cdTransaccion, Integer cdCurva, Integer cdSobretasa, String ldFecha);
 

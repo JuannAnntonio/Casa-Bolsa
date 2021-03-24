@@ -126,8 +126,8 @@ public class MercadoDeDerivadosService {
 	}
 
 	@Transactional(readOnly = true)
-	public Boolean existsByDate(String fecha) {
-		return valueBoolean(calRepo.existsByDate(fecha));
+	public Integer existsByDate(String fecha) {
+		return calRepo.existsByDate(fecha);
 	}
 
 	private Boolean valueBoolean(Boolean valor) {

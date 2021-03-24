@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +25,8 @@ import com.phi.proyect.models.Vista;
 import com.phi.proyect.service.FuncionesService;
 import com.phi.proyect.service.MercadoDeDerivadosService;
 import com.phi.proyect.service.ParametrosService;
+import com.phi.proyect.service.VarFactoryService;
+import com.phi.proyect.vo.ResponseApp;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -32,6 +36,9 @@ public class MercadoDeDerivadosController {
 	private final FuncionesService fsFuncionesService;
 	private final MercadoDeDerivadosService deDerivadosService;
 	private final ParametrosService params;
+	
+	@Autowired
+	private VarFactoryService varFactoryService;
 
 	public MercadoDeDerivadosController(FuncionesService fsFuncionesService,
 			MercadoDeDerivadosService deDerivadosService, ParametrosService params) {
@@ -86,32 +93,15 @@ public class MercadoDeDerivadosController {
 					// lista.get(i).getNuCurvaDescuento(),
 					// fecha,lista.get(i).getNuFlotante(),porce3);
 				} else if (lista.get(i).getTpProducto() == 2) {
-					resultado = fsFuncionesService.ValSwapTiie(lista.get(i).getCdTransaccion(),
-							lista.get(i).getNuCurvaDescuento(), fecha, lista.get(i).getNuFlotante());
-					if (resultado == (Double) null) {
-						resultado = (double) 0.0;
-					}
+					resultado = fsFuncionesService.ValSwap(lista.get(i).getCdTransaccion(),
+							lista.get(i).getNuCurvaDescuento(), lista.get(i).getNuFlotante(),fecha);
 
 					result = deDerivadosService.create(new Tvaluacionhoy(lista.get(i).getCdTransaccion(), resultado, 2,
 							f, resultVar1, resultVar2, resultVar3, 200));
 
-					resultVar1 = fsFuncionesService.VaRSwapTiie(lista.get(i).getCdTransaccion(),
-							lista.get(i).getNuCurvaDescuento(), fecha, lista.get(i).getNuFlotante(), porce1);
-					if (resultVar1 == (Double) null) {
-						resultVar1 = (double) 0.0;
-					}
-					resultVar2 = fsFuncionesService.VaRSwapTiie(lista.get(i).getCdTransaccion(),
-							lista.get(i).getNuCurvaDescuento(), fecha, lista.get(i).getNuFlotante(), porce2);
-
-					if (resultVar2 == (Double) null) {
-						resultVar2 = (double) 0.0;
-					}
-					resultVar3 = fsFuncionesService.VaRSwapTiie(lista.get(i).getCdTransaccion(),
-							lista.get(i).getNuCurvaDescuento(), fecha, lista.get(i).getNuFlotante(), porce3);
-
-					if (resultVar3 == (Double) null) {
-						resultVar3 = (double) 0.0;
-					}
+					resultVar1 = fsFuncionesService.varswap(porce1);
+					resultVar2 = fsFuncionesService.varswap(porce2);
+					resultVar3 = fsFuncionesService.varswap(porce3);
 				}
 
 				result = deDerivadosService.actualizarReg(new Tvaluacionhoy(lista.get(i).getCdTransaccion(), resultado,
@@ -151,17 +141,24 @@ public class MercadoDeDerivadosController {
 	}
 
 	@PostMapping(value = "/generarVarFactory")
-	public ResponseTransfer generarVarFactory() {
-
-		return new ResponseTransfer("Success");
-	}
-
-	@PostMapping(value = "/existenRegistros")
-	public Boolean existenRegistros(@RequestBody ObjectNode obj) {
+	public ResponseApp generarVarFactory(@RequestBody ObjectNode obj) {
 		String fecha = obj.get("fecha").asText();
 		System.out.println("### fecha :" + fecha);
 
-		return deDerivadosService.existsByDate(fecha);
+		ResponseApp msj = varFactoryService.generarVarFactory(fecha);	
+		System.out.println("### MSJ :" + msj);
+		return msj;
+	}
+
+	@PostMapping(value = "/validaGenerarVarFactory")
+	public ResponseApp existenRegistros(@RequestBody ObjectNode obj) {
+		String fecha = obj.get("fecha").asText();
+		System.out.println("### fecha :" + fecha);
+		
+		ResponseApp msj = varFactoryService.existenCurvasByDate(fecha);	
+		System.out.println("### MSJ :" + msj);
+
+		return msj;
 	}
 
 }

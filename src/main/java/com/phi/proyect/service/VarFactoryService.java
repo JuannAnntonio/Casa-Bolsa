@@ -3,6 +3,8 @@ package com.phi.proyect.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.phi.proyect.enums.InstrumentoEnum;
@@ -17,7 +19,10 @@ import com.phi.proyect.models.Parametros;
 import com.phi.proyect.repository.CdMercadoRepository;
 import com.phi.proyect.repository.DeForwardRepository;
 import com.phi.proyect.repository.DeSwapRepository;
+import com.phi.proyect.repository.HCurvasRepositiry;
+import com.phi.proyect.repository.LnCurvasRepositiry;
 import com.phi.proyect.repository.ValuacionHistoricoRepository;
+import com.phi.proyect.vo.ResponseApp;
 
 @Service
 public class VarFactoryService {
@@ -40,26 +45,51 @@ public class VarFactoryService {
 	private CdMercadoRepository cdMercadoRepository;
 	@Autowired
 	private ValuacionHistoricoRepository valuacionHistoricoRepository;
-
+	@Autowired
+	private HCurvasRepositiry hCurvasRepository;
+	@Autowired
+	private LnCurvasRepositiry lnCurvaRepository;
+	
 	private String fecha = "";
 	private String usuario = "1";
 	private int porce1 = 3;
 	private int porce2 = 7;
 	private int porce3 = 13;
-
+	
+	
 	/*
 	 * 
 	 * Combo fecha *** - h_curvas y ln_curvas deben tener datos con la fecha
 	 * seleccionada - Si no hay datos ...
 	 * "No se encontraron registros de curvas para la fecha: "
 	 * 
+	 */
+	public ResponseApp existenCurvasByDate(String fecha) {
+		boolean hayDatos = hCurvasRepository.existsByDate(fecha) > 0 && lnCurvaRepository.existsByDate(fecha) > 0;
+		if (!hayDatos) {
+			return new ResponseApp(HttpStatus.NO_CONTENT, "No se encontraron registros de curvas para la fecha: "
+					+ fecha + ", por favor intenta con otra fecha.");
+		}
+		return existenRegistros(fecha);
+	}
+
+	/*
+	 * 
 	 * - datos_var -> si existen datos con esa fecha, si hay, preguntar si los
 	 * reemplaza? - delete datos_var con la fecha seleccionada
 	 * 
 	 */
+	public ResponseApp existenRegistros(String fecha) {
+		boolean hayDatos = deDerivadosService.existsByDate(fecha) > 0;
+		if (hayDatos) {
+			return new ResponseApp(HttpStatus.FOUND,
+					"Se encontrarón datos con la fecha seleccionada. Desea continuar con el proceso.");
+		}
+		return generarVarFactory(fecha);
+	}
 
-	private void initPorceso() {
-		fecha = deDerivadosService.findValueDate();
+	private void initPorceso(String fecha) {
+		this.fecha = fecha;
 		List<Parametros> listaparam = params.findParametro("PORCENTAJE");
 		if (listaparam.size() > 0) {
 			String porc = listaparam.get(0).getValorDelParametro();
@@ -70,8 +100,9 @@ public class VarFactoryService {
 		}
 	}
 	
-	public String generarVarFactory() {
-		this.initPorceso();
+	
+	public ResponseApp generarVarFactory(String fecha) {
+		this.initPorceso(fecha);
 		for (CdInstrumento instrumento : instrumentoService.getAllInstrumentos()) {
 
 			if (InstrumentoEnum.SWAP_TIIE.getId().equals(instrumento.getIdInstrumento())) {
@@ -96,12 +127,10 @@ public class VarFactoryService {
 						.saveDatosVar(new DatosVar(0, "0", mercado.getIdMercado(), usuario, fecha, 0.0, 0.0, 0.0, 0.0));
 			}
 		}
-
-		return "Success";
+		return new ResponseApp(HttpStatus.OK , "SUCCESS");
 	}
 
 	private void insertMercado(CdMercado mercado) {
-
 		Double valuacion = fsFuncionesService.VaLRxMercado(mercado.getIdMercado(), 1, 1);
 		Double var1 = fsFuncionesService.VaLRxMercado(mercado.getIdMercado(), porce1, 2);
 		Double var2 = fsFuncionesService.VaLRxMercado(mercado.getIdMercado(), porce2, 2);
@@ -109,33 +138,33 @@ public class VarFactoryService {
 
 		deDerivadosService.saveDatosVar(
 				new DatosVar(0, "0", mercado.getIdMercado(), usuario, fecha, var1, var2, var3, valuacion));
-
 	}
 
-	
-
 	private void executeSwap(CdInstrumento instrumento) {
-
 		for (DeSwap swap : deSwapRepository.findAll()) {
-
-			Double valuacion = fsFuncionesService.ValSwapTiie(swap.getCdTransaccion(), swap.getNuCurvaDescuento(),
-					fecha, swap.getNuFlotante());
-
-			Double var1 = fsFuncionesService.VaRSwapTiie(swap.getCdTransaccion(), swap.getNuFlotante(), fecha,
-					swap.getNuCurvaDescuento(), porce1);
-			Double var2 = fsFuncionesService.VaRSwapTiie(swap.getCdTransaccion(), swap.getNuFlotante(), fecha,
-					swap.getNuCurvaDescuento(), porce2);
-			Double var3 = fsFuncionesService.VaRSwapTiie(swap.getCdTransaccion(), swap.getNuFlotante(), fecha,
-					swap.getNuCurvaDescuento(), porce3);
+			Double valuacion = fsFuncionesService.ValSwap(swap.getCdTransaccion(), swap.getNuCurvaDescuento(),
+					swap.getNuFlotante(), fecha);
+			
+			callInsertaSwap(swap.getCdTransaccion(),swap.getNuCurvaDescuento(),swap.getNuFlotante(), fecha);
+			
+			Double var1 = fsFuncionesService.varswap(porce1);
+			Double var2 = fsFuncionesService.varswap(porce2);
+			Double var3 = fsFuncionesService.varswap(porce3);
 
 			deDerivadosService.saveDatosVar(new DatosVar(instrumento.getIdInstrumento(), swap.getCdTransaccion(),
 					MercadoEnum.Mercado_Derivado.getId(), usuario, fecha, var1, var2, var3, valuacion));
 
-			// TODO: FALTA!!! stored procedure -> insertaValSwap -> cdTransaccion, cdCurva,
-			// cdDescuento, ldFecha
+			valuacionHistoricoRepository.insertaValSwap();
 		}
-
 		insertInstrumento(instrumento.getIdInstrumento(), MercadoEnum.Mercado_Derivado);
+	}
+
+	private void callInsertaSwap(String cdTransaccion, Integer cdCurva, Integer cdDescuento, String fecha) {
+		valuacionHistoricoRepository.insertaSwapUno(cdTransaccion, cdCurva, fecha);
+		valuacionHistoricoRepository.insertaSwapDos(cdCurva, fecha);
+		valuacionHistoricoRepository.insertaSwapTres(cdDescuento, fecha);
+		valuacionHistoricoRepository.insertaSwapCuatro(cdCurva, fecha);
+		valuacionHistoricoRepository.insertaSwapCinco(cdDescuento, fecha);
 	}
 
 	private void insertInstrumento(Integer idIntrumento, MercadoEnum mercado) {

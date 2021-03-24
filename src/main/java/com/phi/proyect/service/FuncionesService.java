@@ -35,8 +35,8 @@ public class FuncionesService {
 		return this.fr.ValSwapStarting(CdTransaccion, CdCurva, LdFecha);
 	}
 
-	public Double ValSwapTiie(String CdTransaccion, int CdCurva, String LdFecham, int cdDescuento) {
-		return getValue(this.fr.ValSwapTiie(CdTransaccion, CdCurva, LdFecham, cdDescuento));
+	public Double ValSwap(String CdTransaccion, Integer CdCurva, Integer cdDescuento, String LdFecham) {
+		return getValue(this.fr.ValSwap(CdTransaccion, CdCurva, cdDescuento, LdFecham));
 	}
 
 	public double VaRFuDivisas(String CdTransaccion, int CdCurva, Date LdFecha, int CdIndice, int CdCurvaFor) {
@@ -55,8 +55,8 @@ public class FuncionesService {
 		return this.fr.VarPPPPPPP(CdTransaccion, CdCurva, LdFecha);
 	}
 
-	public Double VaRSwapTiie(String CdTransaccion, int CdCurva, String LdFecham, int cdDescuento, int NuPercentil) {
-		return getValue(this.fr.VaRSwapTiie(CdTransaccion, CdCurva, LdFecham, cdDescuento, NuPercentil));
+	public Double varswap(int NuPercentil) {
+		return getValue(this.fr.varswap(NuPercentil));
 	}
 
 	public Double VaLRxInstrumento(Integer cdInstrumento, Integer nuPercentil, Integer tipoDato) {

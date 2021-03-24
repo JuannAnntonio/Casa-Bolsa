@@ -47,9 +47,8 @@ public interface CalculoDeVarSwapRepository extends JpaRepository<DatosVar, Dato
 	@Query(value = "SET SQL_SAFE_UPDATES = 0;", nativeQuery = true)
 	void setSafeMode();
 
-	@Modifying
-	@Query(value = "SELECT CASE WHEN COUNT(1)> 0 THEN true ELSE false END FROM datos_var WHERE fecha=:fecha", nativeQuery = true)
-	Boolean existsByDate(@Param("fecha") String fecha);
+	@Query(value = "SELECT COUNT(1)FROM datos_var WHERE fecha=:fecha", nativeQuery = true)
+	Integer existsByDate(@Param("fecha") String fecha);
 	
 	@Modifying
 	@Query(value = "delete from datos_var where fecha =:fecha", nativeQuery = true)
