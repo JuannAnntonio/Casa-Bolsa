@@ -39,4 +39,6 @@ public interface ValuacionHistoricoRepository extends JpaRepository<ValuacionHis
 	@Procedure("InsertaValDeudaAmortizable")
 	void insertaValDeudaAmortizable(String cdTransaccion, Integer cdCurva, Integer cdSobretasa, String ldFecha);
 
+	@Procedure("InsertaBonosM")
+	void insertaBonosM(String cdTransaccion, Integer cdCurva, String ldFecha);
 }

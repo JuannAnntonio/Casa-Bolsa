@@ -246,11 +246,20 @@ public class LogaritmoController {
 		return listReturn;
 	}
 
-	@GetMapping(value = "/mesaDerivados")
-	public List<Object> mesaDerivados() {
+	@PostMapping(value = "/mesaDerivados")
+	public List<Object> mesaDerivados(@RequestBody ObjectNode obj) {
+		String fecha = obj.get("fecha").asText();
+		System.out.println("### fecha :" + fecha);
+		
+		if(fecha==null || fecha.equals("")) {
+			fecha = deDerivadosService.findValueDate();
+			System.out.println("### fecha_NULL :" + fecha);
+		}
+		
+		
 		List<Object> retorno = new ArrayList<Object>();
 
-		String fecha = deDerivadosService.findValueDate();
+
 		System.out.println("### fecha :" + fecha);
 		List<VarLimite> varLimiteLista = varlimSer.findAll("2");
 		// POSICION GLOBAL -> MERCADO = 1

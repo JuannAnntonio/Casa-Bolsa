@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.phi.proyect.enums.InstrumentoEnum;
@@ -49,14 +48,13 @@ public class VarFactoryService {
 	private HCurvasRepositiry hCurvasRepository;
 	@Autowired
 	private LnCurvasRepositiry lnCurvaRepository;
-	
+
 	private String fecha = "";
 	private String usuario = "1";
 	private int porce1 = 3;
 	private int porce2 = 7;
 	private int porce3 = 13;
-	
-	
+
 	/*
 	 * 
 	 * Combo fecha *** - h_curvas y ln_curvas deben tener datos con la fecha
@@ -99,8 +97,7 @@ public class VarFactoryService {
 			porce3 = Integer.parseInt(parts[2]);
 		}
 	}
-	
-	
+
 	public ResponseApp generarVarFactory(String fecha) {
 		this.initPorceso(fecha);
 		for (CdInstrumento instrumento : instrumentoService.getAllInstrumentos()) {
@@ -127,7 +124,7 @@ public class VarFactoryService {
 						.saveDatosVar(new DatosVar(0, "0", mercado.getIdMercado(), usuario, fecha, 0.0, 0.0, 0.0, 0.0));
 			}
 		}
-		return new ResponseApp(HttpStatus.OK , "SUCCESS");
+		return new ResponseApp(HttpStatus.OK, "SUCCESS");
 	}
 
 	private void insertMercado(CdMercado mercado) {
@@ -144,9 +141,9 @@ public class VarFactoryService {
 		for (DeSwap swap : deSwapRepository.findAll()) {
 			Double valuacion = fsFuncionesService.ValSwap(swap.getCdTransaccion(), swap.getNuCurvaDescuento(),
 					swap.getNuFlotante(), fecha);
-			
-			callInsertaSwap(swap.getCdTransaccion(),swap.getNuCurvaDescuento(),swap.getNuFlotante(), fecha);
-			
+
+			callInsertaSwap(swap.getCdTransaccion(), swap.getNuCurvaDescuento(), swap.getNuFlotante(), fecha);
+
 			Double var1 = fsFuncionesService.varswap(porce1);
 			Double var2 = fsFuncionesService.varswap(porce2);
 			Double var3 = fsFuncionesService.varswap(porce3);
@@ -193,8 +190,6 @@ public class VarFactoryService {
 			} else if (deuda.getCdAmortizable().equals(3)) {
 				auxiliarBonosM(deuda, instrumento.getIdInstrumento());
 			}
-			
-			// SP insertaValBonosM -> cdTransaccion, cdCurva, cdSobreTasa, ldFecha (2)
 		}
 		insertInstrumento(instrumento.getIdInstrumento(), MercadoEnum.Mercado_Dinero); //
 
@@ -217,8 +212,8 @@ public class VarFactoryService {
 					.saveDatosVar(new DatosVar(instrumento.getIdInstrumento(), forward.getCdTransaccion().toString(),
 							MercadoEnum.Mercado_Derivado.getId(), usuario, fecha, var1, var2, var3, valuacion));
 
-			valuacionHistoricoRepository.insertaValRForward(forward.getCdTransaccion().toString(), forward.getNuCurvaLocal(), 
-					forward.getNuCurvaForanea(), forward.getNuIndice(), fecha);
+			valuacionHistoricoRepository.insertaValRForward(forward.getCdTransaccion().toString(),
+					forward.getNuCurvaLocal(), forward.getNuCurvaForanea(), forward.getNuIndice(), fecha);
 		}
 		insertInstrumento(instrumento.getIdInstrumento(), MercadoEnum.Mercado_Derivado);
 
@@ -280,7 +275,7 @@ public class VarFactoryService {
 
 		deDerivadosService.saveDatosVar(new DatosVar(idInstrumento, deuda.getCdTransaccion(),
 				MercadoEnum.Mercado_Dinero.getId(), usuario, fecha, var1, var2, var3, valuacion));
-		
+
 		valuacionHistoricoRepository.insertaValDeudaAmortizable(deuda.getCdTransaccion(), deuda.getCdCurva(),
 				deuda.getCdSobretasa(), fecha);
 	}
@@ -296,7 +291,7 @@ public class VarFactoryService {
 		deDerivadosService.saveDatosVar(new DatosVar(idInstrumento, deuda.getCdTransaccion(),
 				MercadoEnum.Mercado_Dinero.getId(), usuario, fecha, var1, var2, var3, valuacion));
 
-		// TODO: FALTA!!! stored procedure -> ???
+		valuacionHistoricoRepository.insertaBonosM(deuda.getCdTransaccion(), deuda.getCdCurva(), fecha);
 	}
 
 }
