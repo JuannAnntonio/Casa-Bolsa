@@ -248,17 +248,9 @@ public class LogaritmoController {
 
 	@PostMapping(value = "/mesaDerivados")
 	public List<Object> mesaDerivados(@RequestBody ObjectNode obj) {
-		String fecha = obj.get("fecha").asText();
-		System.out.println("### fecha :" + fecha);
-		
-		if(fecha==null || fecha.equals("")) {
-			fecha = deDerivadosService.findValueDate();
-			System.out.println("### fecha_NULL :" + fecha);
-		}
-		
+		String fecha = getFecha(obj.get("fecha").asText());
 		
 		List<Object> retorno = new ArrayList<Object>();
-
 
 		System.out.println("### fecha :" + fecha);
 		List<VarLimite> varLimiteLista = varlimSer.findAll("2");
@@ -279,7 +271,7 @@ public class LogaritmoController {
 	@PostMapping(value = "/getProductos")
 	public List<DatosVarProjectionEntity> getProductos(@RequestBody ObjectNode obj) {
 		String idMercado = obj.get("idMercado").asText();
-		String fecha = deDerivadosService.findValueDate();
+		String fecha = getFecha(obj.get("fecha").asText());;
 
 		return datosVarService.findProductosByMercado(idMercado, fecha);
 	}
@@ -288,7 +280,7 @@ public class LogaritmoController {
 	public List<DatosVar> getTransacciones(@RequestBody ObjectNode obj) {
 		String idMercado = obj.get("idMercado").asText();
 		String idInstrumento = obj.get("idInstrumento").asText();
-		String fecha = deDerivadosService.findValueDate();
+		String fecha = getFecha(obj.get("fecha").asText());
 
 		System.out.println("### idMercado :" + idMercado);
 		System.out.println("### idInstrumento :" + idInstrumento);
@@ -297,4 +289,12 @@ public class LogaritmoController {
 		return datosVarService.getTransacciones(idMercado, idInstrumento, fecha);
 	}
 
+	private String getFecha(String fecha) {
+		String validateFecha = fecha;
+		if(validateFecha==null || validateFecha.equals("")) {
+			validateFecha = deDerivadosService.findValueDate();
+		}
+		System.out.println("### fecha :" + validateFecha);
+		return validateFecha;
+	}
 }

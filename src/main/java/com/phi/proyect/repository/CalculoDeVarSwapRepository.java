@@ -63,7 +63,7 @@ public interface CalculoDeVarSwapRepository extends JpaRepository<DatosVar, Dato
 
 	String SQL_MERCADOS_VAR = "SELECT mer.nombre, datv.* FROM datos_var datv \n"
 			+ "JOIN cd_mercado mer ON mer.ID_Mercado = datv.cd_mercado\n" + "WHERE datv.cd_instrumento=0 \n"
-			+ "    and datv.cd_mercado<>1\n" + "    and mer.cd_activo=1 and datv.fecha =:fecha";
+			+ "    and datv.cd_mercado<>1\n" + " and datv.fecha =:fecha";
 
 	@Query(value = SQL_MERCADOS_VAR, nativeQuery = true)
 	List<DatosVarProjectionEntity> findByFechaMercados(@Param("fecha") String fecha);

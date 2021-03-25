@@ -100,6 +100,7 @@ public class VarFactoryService {
 
 	public ResponseApp generarVarFactory(String fecha) {
 		this.initPorceso(fecha);
+		valuacionHistoricoRepository.deleteAll();
 		for (CdInstrumento instrumento : instrumentoService.getAllInstrumentos()) {
 
 			if (InstrumentoEnum.SWAP_TIIE.getId().equals(instrumento.getIdInstrumento())) {
