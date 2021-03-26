@@ -44,7 +44,7 @@ public interface CalculoDeVarSwapRepository extends JpaRepository<DatosVar, Dato
 
 	@Modifying
 	@Transactional
-	@Query(value = "SET SQL_SAFE_UPDATES = 0;", nativeQuery = true)
+	@Query(value = "SET SQL_SAFE_UPDATES = 0", nativeQuery = true)
 	void setSafeMode();
 
 	@Query(value = "SELECT COUNT(1)FROM datos_var WHERE fecha=:fecha", nativeQuery = true)
@@ -80,7 +80,8 @@ public interface CalculoDeVarSwapRepository extends JpaRepository<DatosVar, Dato
 	
 	String SQL_TRANSACCIONES_VAR = "SELECT dvar.* FROM datos_var dvar\n" + 
 			"WHERE dvar.cd_mercado=:idMercado \n" + 
-			"    and dvar.cd_instrumento=:idInstrumento \n" + 
+			"    and dvar.cd_instrumento=:idInstrumento \n" +
+			"    and dvar.cd_transaccion!='Portafolio' \n" +
 			"    and dvar.fecha =:fecha";
 
 	@Query(value = SQL_TRANSACCIONES_VAR, nativeQuery = true)
