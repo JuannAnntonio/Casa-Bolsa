@@ -38,4 +38,12 @@ public class DeDeudaService {
 		}
 		return deDeudas;
 	}
+	
+	public List<DeDeuda> findBonosM() {
+		List<DeDeuda> deDeudas = deDeudaRepository.findByProcessVarFactory(20);
+		if (deDeudas == null || deDeudas.isEmpty()) {
+			return new ArrayList<>();
+		}
+		return deDeudas;
+	}
 }

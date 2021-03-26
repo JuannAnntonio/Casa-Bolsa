@@ -144,9 +144,10 @@ public class VarFactoryService {
 
 	private void executeSwap(CdInstrumento instrumento) {
 		for (DeSwap swap : deSwapRepository.findByInstrumento(instrumento.getIdInstrumento())) {
-			Double valuacion = fsFuncionesService.ValSwap(swap.getCdTransaccion(), swap.getNuFlotante(), swap.getNuCurvaDescuento(), fecha);
+			Double valuacion = fsFuncionesService.ValSwap(swap.getCdTransaccion(), swap.getNuFlotante(),
+					swap.getNuCurvaDescuento(), fecha);
 
-			callInsertaSwap(swap.getCdTransaccion(), swap.getNuFlotante(),swap.getNuCurvaDescuento(), fecha);
+			callInsertaSwap(swap.getCdTransaccion(), swap.getNuFlotante(), swap.getNuCurvaDescuento(), fecha);
 
 			Double var1 = fsFuncionesService.varswap(porce1);
 			Double var2 = fsFuncionesService.varswap(porce2);
@@ -184,15 +185,14 @@ public class VarFactoryService {
 		}
 		insertInstrumento(instrumento.getIdInstrumento(), MercadoEnum.Mercado_Dinero);
 	}
-	
+
 	private void executeBonosM(CdInstrumento instrumento) {
-		for (DeDeuda deuda : deDeudaService.findBonosCorporativosProcessVarFactory()) {
+		for (DeDeuda deuda : deDeudaService.findBonosM()) {
 			auxiliarBonosM(deuda, instrumento.getIdInstrumento());
 		}
-		insertInstrumento(instrumento.getIdInstrumento(), MercadoEnum.Mercado_Dinero); 
+		insertInstrumento(instrumento.getIdInstrumento(), MercadoEnum.Mercado_Dinero);
 	}
-	
-	
+
 	private void executeBonosCorporativos(CdInstrumento instrumento) {
 		for (DeDeuda deuda : deDeudaService.findBonosCorporativosProcessVarFactory()) {
 			if (deuda.getCdAmortizable().equals(1)) {
@@ -203,7 +203,7 @@ public class VarFactoryService {
 				auxiliarBonosM(deuda, instrumento.getIdInstrumento());
 			}
 		}
-		insertInstrumento(instrumento.getIdInstrumento(), MercadoEnum.Mercado_Dinero); 
+		insertInstrumento(instrumento.getIdInstrumento(), MercadoEnum.Mercado_Dinero);
 	}
 
 	// valForward, varForward
