@@ -143,7 +143,7 @@ public class VarFactoryService {
 	}
 
 	private void executeSwap(CdInstrumento instrumento) {
-		for (DeSwap swap : deSwapRepository.findAll()) {
+		for (DeSwap swap : deSwapRepository.findByInstrumento(instrumento.getIdInstrumento())) {
 			Double valuacion = fsFuncionesService.ValSwap(swap.getCdTransaccion(), swap.getNuFlotante(), swap.getNuCurvaDescuento(), fecha);
 
 			callInsertaSwap(swap.getCdTransaccion(), swap.getNuFlotante(),swap.getNuCurvaDescuento(), fecha);
