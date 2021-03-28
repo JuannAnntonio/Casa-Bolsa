@@ -13,7 +13,7 @@ import com.phi.proyect.models.GraficaVarHistorico;
 public interface GraficaVarHistoricoRepository extends JpaRepository<GraficaVarHistorico, String> {
 
 	@Modifying
-	@Query(value = "delete from grafica_var_historico where fh_date =:fecha", nativeQuery = true)
+	@Query(value = "delete from grafica_var_historico where fh_date=:fecha", nativeQuery = true)
 	void deleteByFecha(@Param("fecha") String fecha);
 
 	@Procedure("InsertaGraficaVaRHistoricoP")

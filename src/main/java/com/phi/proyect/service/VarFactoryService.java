@@ -18,7 +18,6 @@ import com.phi.proyect.models.Parametros;
 import com.phi.proyect.repository.CdMercadoRepository;
 import com.phi.proyect.repository.DeForwardRepository;
 import com.phi.proyect.repository.DeSwapRepository;
-import com.phi.proyect.repository.GraficaVarHistoricoRepository;
 import com.phi.proyect.repository.HCurvasRepositiry;
 import com.phi.proyect.repository.LnCurvasRepositiry;
 import com.phi.proyect.repository.ValuacionHistoricoRepository;
@@ -50,7 +49,7 @@ public class VarFactoryService {
 	@Autowired
 	private LnCurvasRepositiry lnCurvaRepository;
 	@Autowired
-	private GraficaVarHistoricoRepository graficaRepository;
+	private GraficaVarHistoricoService graficaService;
 
 	private String fecha = "";
 	private String usuario = "1";
@@ -105,7 +104,7 @@ public class VarFactoryService {
 		this.initPorceso(fecha);
 		valuacionHistoricoRepository.deleteAll();
 		deDerivadosService.deleteCalculo(fecha);
-		graficaRepository.deleteByFecha(fecha);
+		graficaService.deleteByFecha(fecha);
 		for (CdInstrumento instrumento : instrumentoService.getAllInstrumentos()) {
 
 			if (InstrumentoEnum.SWAP_TIIE.getId().equals(instrumento.getIdInstrumento())
@@ -145,9 +144,9 @@ public class VarFactoryService {
 		deDerivadosService.saveDatosVar(
 				new DatosVar(0, "0", mercado.getIdMercado(), usuario, fecha, var1, var2, var3, valuacion));
 
-		graficaRepository.insertaGraficaVarHistoricoM(1, porce1, mercado.getIdMercado(), fecha);// 99
-		graficaRepository.insertaGraficaVarHistoricoM(2, porce2, mercado.getIdMercado(), fecha);// 97
-		graficaRepository.insertaGraficaVarHistoricoM(3, porce3, mercado.getIdMercado(), fecha);// 95
+		graficaService.insertaGraficaVarHistoricoM(1, porce1, mercado.getIdMercado(), fecha);// 99
+		graficaService.insertaGraficaVarHistoricoM(2, porce2, mercado.getIdMercado(), fecha);// 97
+		graficaService.insertaGraficaVarHistoricoM(3, porce3, mercado.getIdMercado(), fecha);// 95
 
 	}
 
@@ -187,9 +186,9 @@ public class VarFactoryService {
 		deDerivadosService.saveDatosVar(
 				new DatosVar(idIntrumento, "Portafolio", mercado.getId(), usuario, fecha, var1, var2, var3, valuacion));
 
-		graficaRepository.insertaGraficaVaRHistoricoP(1, porce1, idIntrumento, fecha);// 99
-		graficaRepository.insertaGraficaVaRHistoricoP(2, porce2, idIntrumento, fecha);// 97
-		graficaRepository.insertaGraficaVaRHistoricoP(3, porce3, idIntrumento, fecha);// 95
+		graficaService.insertaGraficaVaRHistoricoP(1, porce1, idIntrumento, fecha);// 99
+		graficaService.insertaGraficaVaRHistoricoP(2, porce2, idIntrumento, fecha);// 97
+		graficaService.insertaGraficaVaRHistoricoP(3, porce3, idIntrumento, fecha);// 95
 
 	}
 
