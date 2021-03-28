@@ -33,6 +33,7 @@ import com.phi.proyect.models.Vector;
 import com.phi.proyect.models.VectorPreciosDia;
 import com.phi.proyect.repository.projection.DatosVarProjectionEntity;
 import com.phi.proyect.service.DatosVarService;
+import com.phi.proyect.service.GraficaVarHistoricoService;
 import com.phi.proyect.service.LogaritmoService;
 import com.phi.proyect.service.MercadoDeDerivadosService;
 import com.phi.proyect.service.OperacionService;
@@ -62,6 +63,8 @@ public class LogaritmoController {
 	private MercadoDeDerivadosService deDerivadosService;
 	@Autowired
 	private Algoritmos algoritmos;
+	@Autowired
+	private GraficaVarHistoricoService graficoService;
 
 	public LogaritmoController(LogaritmoService log, VectorService vecSer, VectorPreciosDiaService vecpds,
 			VarLimiteService varlimSer, ValuacionesMdService vs, OperacionService ops,
@@ -249,17 +252,20 @@ public class LogaritmoController {
 	@PostMapping(value = "/mesaDerivados")
 	public List<Object> mesaDerivados(@RequestBody ObjectNode obj) {
 		String fecha = getFecha(obj.get("fecha").asText());
+		String tpPercentil = obj.get("tpPercentil").asText();
 		
 		List<Object> retorno = new ArrayList<Object>();
 
 		System.out.println("### fecha :" + fecha);
+		System.out.println("### tpPercentil :" + tpPercentil);
+		
 		List<VarLimite> varLimiteLista = varlimSer.findAll("2");
 		// POSICION GLOBAL -> MERCADO = 1
 		DatosVar posicionGlobal = datosVarService.findPosicionGlobalByFecha(fecha);
 		// PRIMERA TABLA (MERCADOS)
 		List<DatosVarProjectionEntity> mercados = datosVarService.findMercadosByFecha(fecha);
-
-		retorno.add(null);
+		
+		retorno.add(graficoService.getDataChart(tpPercentil, fecha));
 		retorno.add(varLimiteLista);// si
 		retorno.add(posicionGlobal);// si
 		retorno.add(fecha);// si
@@ -269,24 +275,36 @@ public class LogaritmoController {
 	}
 
 	@PostMapping(value = "/getProductos")
-	public List<DatosVarProjectionEntity> getProductos(@RequestBody ObjectNode obj) {
+	public List<Object> getProductos(@RequestBody ObjectNode obj) {
 		String idMercado = obj.get("idMercado").asText();
-		String fecha = getFecha(obj.get("fecha").asText());;
+		String fecha = getFecha(obj.get("fecha").asText());
+		String tpPercentil = obj.get("tpPercentil").asText();
 
-		return datosVarService.findProductosByMercado(idMercado, fecha);
+		List<Object> retorno = new ArrayList<Object>();
+		
+		retorno.add(datosVarService.findProductosByMercado(idMercado, fecha));
+		retorno.add(graficoService.getDataChart(tpPercentil, idMercado, fecha));
+		
+		return retorno;
 	}
 
 	@PostMapping(value = "/getTransacciones")
-	public List<DatosVar> getTransacciones(@RequestBody ObjectNode obj) {
+	public List<Object> getTransacciones(@RequestBody ObjectNode obj) {
 		String idMercado = obj.get("idMercado").asText();
 		String idInstrumento = obj.get("idInstrumento").asText();
 		String fecha = getFecha(obj.get("fecha").asText());
+		String tpPercentil = obj.get("tpPercentil").asText();
 
 		System.out.println("### idMercado :" + idMercado);
 		System.out.println("### idInstrumento :" + idInstrumento);
 		System.out.println("### fecha :" + fecha);
-
-		return datosVarService.getTransacciones(idMercado, idInstrumento, fecha);
+		
+		List<Object> retorno = new ArrayList<Object>();
+		
+		retorno.add(datosVarService.getTransacciones(idMercado, idInstrumento, fecha));
+		retorno.add(graficoService.getDataChart(tpPercentil, idMercado,idInstrumento, fecha));
+		
+		return retorno;
 	}
 
 	private String getFecha(String fecha) {
