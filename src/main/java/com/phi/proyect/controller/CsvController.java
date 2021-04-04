@@ -312,9 +312,9 @@ public class CsvController {
 			flujosSwap.setNuPlazoCupon(obj.get("4").asInt());
 			flujosSwap.setNuTasaVigente(obj.get("5").asDouble());
 			flujosSwap.setCdActivo(obj.get("6").asInt());
-			flujosSwap.setFh_Pago_b(obj.get("7").asText());
-			flujosSwap.setNu_Monto_Pago_b(obj.get("8").asDouble());
-			flujosSwap.setNu_PlazoCupon_b(obj.get("9").asInt());
+			flujosSwap.setFhPagoB(obj.get("7").asText());
+			flujosSwap.setNuMontoPagoB(obj.get("8").asDouble());
+			flujosSwap.setNuPlazoCuponB(obj.get("9").asInt());
 
 			String response = "Error";
 			int resp = csvService.saveFlujosSwap(flujosSwap);

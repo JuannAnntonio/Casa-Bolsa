@@ -2,113 +2,106 @@ package com.phi.proyect.models;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="flujos_swap")
-public class FlujosSwap implements Serializable{
+@Table(name = "flujos_swap")
+public class FlujosSwap implements Serializable {
+
+	private static final long serialVersionUID = -2750379947678674230L;
 
 	@Id
-	@JoinColumn(name="Cd_Transaccion")
-	private String CdTransaccion;
-	
-	private int NuPago;
-	private String FhPago;
-	private Double NuMontoPago;
-	
-	private int Nu_PlazoCupon;
-	private Double Nu_TasaVigente;
-	private int CdActivo;
-	private String Fh_Pago_b;
-	private Double Nu_Monto_Pago_b;
-	private int Nu_PlazoCupon_b;
-	
-	public FlujosSwap() {
-		super();
-	}
+	private String cdTransaccion;
+	private Integer nuPago;
+	private String fhPago;
+	private Double nuMontoPago;
+	private Integer nuPlazoCupon;
+	private Double NuTasaVigente;
+	private Integer cdActivo;
+	private String fhPagoB;
+	private Double nuMontoPagoB;
+	private Integer nuPlazoCuponB;
 
 	public String getCdTransaccion() {
-		return CdTransaccion;
+		return cdTransaccion;
 	}
 
 	public void setCdTransaccion(String cdTransaccion) {
-		CdTransaccion = cdTransaccion;
+		this.cdTransaccion = cdTransaccion;
 	}
 
-	public int getNuPago() {
-		return NuPago;
+	public Integer getNuPago() {
+		return nuPago;
 	}
 
-	public void setNuPago(int nuPago) {
-		NuPago = nuPago;
+	public void setNuPago(Integer nuPago) {
+		this.nuPago = nuPago;
 	}
 
 	public String getFhPago() {
-		return FhPago;
+		return fhPago;
 	}
 
 	public void setFhPago(String fhPago) {
-		FhPago = fhPago;
+		this.fhPago = fhPago;
 	}
 
 	public Double getNuMontoPago() {
-		return NuMontoPago;
+		return nuMontoPago;
 	}
 
 	public void setNuMontoPago(Double nuMontoPago) {
-		NuMontoPago = nuMontoPago;
+		this.nuMontoPago = nuMontoPago;
 	}
 
-	public int getNuPlazoCupon() {
-		return Nu_PlazoCupon;
+	public Integer getNuPlazoCupon() {
+		return nuPlazoCupon;
 	}
 
-	public void setNuPlazoCupon(int nuPlazoCupon) {
-		Nu_PlazoCupon = nuPlazoCupon;
+	public void setNuPlazoCupon(Integer nuPlazoCupon) {
+		this.nuPlazoCupon = nuPlazoCupon;
 	}
 
 	public Double getNuTasaVigente() {
-		return Nu_TasaVigente;
+		return NuTasaVigente;
 	}
 
 	public void setNuTasaVigente(Double nuTasaVigente) {
-		Nu_TasaVigente = nuTasaVigente;
+		NuTasaVigente = nuTasaVigente;
 	}
 
-	public int getCdActivo() {
-		return CdActivo;
+	public Integer getCdActivo() {
+		return cdActivo;
 	}
 
-	public void setCdActivo(int cdActivo) {
-		CdActivo = cdActivo;
+	public void setCdActivo(Integer cdActivo) {
+		this.cdActivo = cdActivo;
 	}
 
-	public String getFh_Pago_b() {
-		return Fh_Pago_b;
+	public String getFhPagoB() {
+		return fhPagoB;
 	}
 
-	public void setFh_Pago_b(String fh_Pago_b) {
-		Fh_Pago_b = fh_Pago_b;
+	public void setFhPagoB(String fhPagoB) {
+		this.fhPagoB = fhPagoB;
 	}
 
-	public Double getNu_Monto_Pago_b() {
-		return Nu_Monto_Pago_b;
+	public Double getNuMontoPagoB() {
+		return nuMontoPagoB;
 	}
 
-	public void setNu_Monto_Pago_b(Double nu_Monto_Pago_b) {
-		Nu_Monto_Pago_b = nu_Monto_Pago_b;
+	public void setNuMontoPagoB(Double nuMontoPagoB) {
+		this.nuMontoPagoB = nuMontoPagoB;
 	}
 
-	public int getNu_PlazoCupon_b() {
-		return Nu_PlazoCupon_b;
+	public Integer getNuPlazoCuponB() {
+		return nuPlazoCuponB;
 	}
 
-	public void setNu_PlazoCupon_b(int nu_PlazoCupon_b) {
-		Nu_PlazoCupon_b = nu_PlazoCupon_b;
+	public void setNuPlazoCuponB(Integer nuPlazoCuponB) {
+		this.nuPlazoCuponB = nuPlazoCuponB;
 	}
-	
+
 }
