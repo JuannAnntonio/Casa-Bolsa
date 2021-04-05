@@ -4,16 +4,19 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "flujos_deuda")
+@IdClass(PrimaryKeyFlujosDeuda.class)
 public class FlujosDeuda implements Serializable {
 
 	private static final long serialVersionUID = 442774597847908535L;
 
 	@Id
 	private String cdTransaccion;
+	@Id
 	private Integer nuFlujo;
 	private Integer nuPlazo;
 	private Double nuNominal;

@@ -12,20 +12,27 @@ import com.phi.proyect.models.CdInstrumento;
 import com.phi.proyect.models.Curvas;
 import com.phi.proyect.models.CurvasParametria;
 import com.phi.proyect.models.DeCapsfloor;
+import com.phi.proyect.models.DeDeuda;
+import com.phi.proyect.models.DeForward;
 import com.phi.proyect.models.DeFuturos;
 import com.phi.proyect.models.DeSwap;
 import com.phi.proyect.models.FlujosCapsfloor;
+import com.phi.proyect.models.FlujosDeuda;
 import com.phi.proyect.models.FlujosSwap;
 import com.phi.proyect.models.HCurvas2;
+import com.phi.proyect.models.PrimaryKeyFlujosDeuda;
 import com.phi.proyect.repository.CdCurvasRepository;
 import com.phi.proyect.repository.CdInstrumentoRepository;
 import com.phi.proyect.repository.CsvRepository;
 import com.phi.proyect.repository.CurvasParametriaRepository;
 import com.phi.proyect.repository.CurvasRepository;
 import com.phi.proyect.repository.DeCapsfloorRepository;
+import com.phi.proyect.repository.DeDeudaRepository;
+import com.phi.proyect.repository.DeForwardRepository;
 import com.phi.proyect.repository.DeFuturosRepository;
 import com.phi.proyect.repository.DeSwapRepository;
 import com.phi.proyect.repository.FlujosCapsfloorRepository;
+import com.phi.proyect.repository.FlujosDeudaRepository;
 import com.phi.proyect.repository.FlujosSwapRepository;
 import com.phi.proyect.repository.HCurvasRepositiry;
 import com.phi.proyect.repository.HCurvasRepositiry2;
@@ -58,6 +65,12 @@ public class CsvService {
 	private DeFuturosRepository deFuturosRepo;
 	@Autowired
 	private CurvasParametriaRepository curvasParametros;
+	@Autowired 
+	private DeForwardRepository forwardRepository;
+	@Autowired 
+	private DeDeudaRepository deudaRepository;
+	@Autowired 
+	private FlujosDeudaRepository flujosDeudaRepository;
 
 	@Transactional
 	public Caps create(Caps caps) {
@@ -153,6 +166,49 @@ public class CsvService {
 				flujosSwap.getNuPlazoCuponB());
 	}
 
+	@Transactional
+	public boolean saveForward(DeForward forward) {
+		DeForward save = this.forwardRepository.save(forward);
+		return this.forwardRepository.existsById(save.getCdTransaccion());
+	}
+
+	@Transactional
+	public void deleteForward(DeForward forward) {
+		if(this.forwardRepository.existsById(forward.getCdTransaccion())) {
+			this.forwardRepository.deleteById(forward.getCdTransaccion());
+		}
+	}
+
+	@Transactional
+	public boolean saveDeuda(DeDeuda deuda) {
+		DeDeuda save = this.deudaRepository.save(deuda);
+		return this.deudaRepository.existsById(save.getCdTransaccion());
+	}
+	
+
+	@Transactional
+	public void deleteDeuda(DeDeuda deuda) {
+		if(this.deudaRepository.existsById(deuda.getCdTransaccion())) {
+			this.deudaRepository.deleteById(deuda.getCdTransaccion());
+		}
+	}
+
+	@Transactional
+	public boolean saveFlujosDeuda(FlujosDeuda flujosDeuda) {
+		FlujosDeuda save = this.flujosDeudaRepository.save(flujosDeuda);
+		PrimaryKeyFlujosDeuda pk = new PrimaryKeyFlujosDeuda(flujosDeuda.getCdTransaccion(),flujosDeuda.getNuFlujo());
+		return this.flujosDeudaRepository.existsById(pk);
+	}
+	
+
+	@Transactional
+	public void deleteFlujosDeuda(FlujosDeuda flujosDeuda) {
+		PrimaryKeyFlujosDeuda pk = new PrimaryKeyFlujosDeuda(flujosDeuda.getCdTransaccion(),flujosDeuda.getNuFlujo());
+		if(this.flujosDeudaRepository.existsById(pk)) {
+			this.flujosDeudaRepository.deleteById(pk);
+		}
+	}
+	
 	@Transactional
 	public List<DeFuturos> findByCodigoDeTransaccion(int id) {
 		return this.deFuturosRepo.findByCodigoDeTransaccion(id);

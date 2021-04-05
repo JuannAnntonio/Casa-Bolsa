@@ -13,7 +13,7 @@ public class DeForward implements Serializable {
 	private static final long serialVersionUID = 4820003446340167490L;
 
 	@Id
-	private Integer cdTransaccion;
+	private String cdTransaccion;
 	private Integer cdInstrumento;
 	private String fechaInicio;
 	private String fechaFin;
@@ -28,11 +28,11 @@ public class DeForward implements Serializable {
 	private String nbTrader;
 	private String nbContraparte;
 
-	public Integer getCdTransaccion() {
+	public String getCdTransaccion() {
 		return cdTransaccion;
 	}
 
-	public void setCdTransaccion(Integer cdTransaccion) {
+	public void setCdTransaccion(String cdTransaccion) {
 		this.cdTransaccion = cdTransaccion;
 	}
 

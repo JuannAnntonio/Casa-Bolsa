@@ -32,10 +32,13 @@ import com.phi.proyect.models.CdInstrumento;
 import com.phi.proyect.models.Curvas;
 import com.phi.proyect.models.CurvasParametria;
 import com.phi.proyect.models.DeCapsfloor;
+import com.phi.proyect.models.DeForward;
+import com.phi.proyect.models.DeDeuda;
 import com.phi.proyect.models.DeFuturos;
 import com.phi.proyect.models.DeSwap;
 import com.phi.proyect.models.FlujosCapsfloor;
 import com.phi.proyect.models.FlujosSwap;
+import com.phi.proyect.models.FlujosDeuda;
 import com.phi.proyect.models.HCurvas;
 import com.phi.proyect.models.HCurvas2;
 import com.phi.proyect.models.LimitesMercado;
@@ -329,6 +332,122 @@ public class CsvController {
 		}
 	}
 
+	@RequestMapping(value = "/fordward", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseTransfer uploadFordward(@RequestBody ObjectNode obj) {
+		//csvService.deleteFlujosSwap();
+		//List<DeSwap> lista = csvService.findByTransaccion(obj.get("0").asText());
+		//if (lista.size() > 0) {
+		DeForward fordward = new DeForward();
+//			Cd_Transaccion,Cd_Instrumento,Fecha_Inicio,Fecha_Fin,Id_Curva_Local,Id_Curva_Foranea ,
+			//Id_Tipo_Cambio,Tc_Pactado ,Nu_Nocional,Tp_Posicion,Nu_Plazo,Nu_Acrrual,Nb_Trader,ClienteflujosSwap.setCdTransaccion(obj.get("0").asText());
+			fordward.setCdTransaccion(obj.get("0").asText());
+			fordward.setCdInstrumento(obj.get("1").asInt());
+			fordward.setFechaInicio(obj.get("2").asText());
+			fordward.setFechaFin(obj.get("3").asText());
+			fordward.setNuCurvaLocal(obj.get("4").asInt());
+			fordward.setNuCurvaForanea(obj.get("5").asInt());
+			fordward.setNuIndice(obj.get("6").asInt());
+			fordward.setNuPactado(obj.get("7").asDouble());
+			fordward.setNuContratos(obj.get("8").asInt());
+			fordward.setNuPosicion(obj.get("9").asInt());
+			fordward.setNuPlazo(obj.get("10").asInt());
+			fordward.setNuConvencion(obj.get("11").asInt());
+			fordward.setNbTrader(obj.get("12").asText());
+			fordward.setNbContraparte(obj.get("13").asText());
+
+			csvService.deleteForward(fordward);	
+			String response = "Error";
+//			int resp = ;
+			if (csvService.saveForward(fordward)) {
+				response = "Insertado Correctamente";
+			}
+			return new ResponseTransfer(response);
+
+	//	} else {
+		//	return new ResponseTransfer(
+			//		"No se encontro el valor " + obj.get("0").asInt() + " tiene que hacer el registro en de_swap");
+	//	}
+	}
+	
+	@RequestMapping(value = "/deuda", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseTransfer uploadDeuda(@RequestBody ObjectNode obj) {
+		//csvService.deleteFlujosSwap();
+		//List<DeSwap> lista = csvService.findByTransaccion(obj.get("0").asText());
+		//if (lista.size() > 0) {
+			DeDeuda deuda= new DeDeuda();
+			deuda.setCdTransaccion(obj.get("0").asText());
+			deuda.setTv(obj.get("1").asText());
+			deuda.setEmision(obj.get("2").asText());
+			deuda.setSerie(obj.get("3").asText());
+			deuda.setDiasVencimiento(obj.get("4").asInt());
+			deuda.setCuponesPendientes(obj.get("5").asInt());
+			deuda.setPlazoCupon(obj.get("6").asInt());
+			deuda.setDiasTranscurridosCupon(obj.get("7").asInt());
+			deuda.setDiasCorteCupon(obj.get("8").asInt());
+			deuda.setValorNominal(obj.get("9").asDouble());
+			deuda.setNuTitulos(obj.get("10").asInt());
+			deuda.setTasaCuponVigente(obj.get("11").asDouble());
+			deuda.setTasaRendimiento(obj.get("12").asDouble());
+			deuda.setSobretasa(obj.get("13").asDouble());
+			deuda.setSobretasaCupon(obj.get("14").asDouble());
+			deuda.setTasaMercado(obj.get("15").asDouble());
+			deuda.setCdCurva(obj.get("16").asInt());
+			deuda.setCdSobretasa(obj.get("17").asInt());
+			deuda.setCdPosicion(obj.get("18").asInt());
+			deuda.setCdInstrumento(obj.get("19").asInt());
+			deuda.setTasaLibros(obj.get("20").asText());
+			deuda.setNuAccrual(obj.get("21").asInt());
+			deuda.setCdAmortizable(obj.get("22").asInt());
+			deuda.setNbTrader(obj.get("23").asText());
+			deuda.setNbContraparte(obj.get("24").asText());
+		
+			String response = "Error";
+//			int resp = ;
+			if (csvService.saveDeuda(deuda)) {
+				response = "Insertado Correctamente";
+			}
+			return new ResponseTransfer(response);
+
+	//	} else {
+		//	return new ResponseTransfer(
+			//		"No se encontro el valor " + obj.get("0").asInt() + " tiene que hacer el registro en de_swap");
+	//	}
+	}
+	
+
+	@RequestMapping(value = "/flujosDeuda", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseTransfer uploadFlujosDeuda(@RequestBody ObjectNode obj) {
+		//csvService.deleteFlujosSwap();
+		//List<DeSwap> lista = csvService.findByTransaccion(obj.get("0").asText());
+		//if (lista.size() > 0) {
+		FlujosDeuda flujosDeuda = new FlujosDeuda();
+//			Cd_Transaccion,Cd_Instrumento,Fecha_Inicio,Fecha_Fin,Id_Curva_Local,Id_Curva_Foranea ,
+			//Id_Tipo_Cambio,Tc_Pactado ,Nu_Nocional,Tp_Posicion,Nu_Plazo,Nu_Acrrual,Nb_Trader,ClienteflujosSwap.setCdTransaccion(obj.get("0").asText());
+			flujosDeuda.setCdTransaccion(obj.get("0").asText());
+			flujosDeuda.setNuFlujo(obj.get("1").asInt());
+			flujosDeuda.setNuPlazo(obj.get("2").asInt());
+			flujosDeuda.setNuNominal(obj.get("3").asDouble());
+			flujosDeuda.setNuAmortizacion(obj.get("4").asDouble());
+			flujosDeuda.setFhInicio(obj.get("5").asText());
+			flujosDeuda.setFhFin(obj.get("6").asText());
+
+			csvService.deleteFlujosDeuda(flujosDeuda);	
+			String response = "Error";
+//			int resp = ;
+			if (csvService.saveFlujosDeuda(flujosDeuda)) {
+				response = "Insertado Correctamente";
+			}
+			return new ResponseTransfer(response);
+
+	//	} else {
+		//	return new ResponseTransfer(
+			//		"No se encontro el valor " + obj.get("0").asInt() + " tiene que hacer el registro en de_swap");
+	//	}
+	}
+	
 	@RequestMapping(value = "/deFuturos", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseTransfer uploadDeFuturos(@RequestBody ObjectNode obj) {
