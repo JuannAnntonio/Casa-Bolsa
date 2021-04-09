@@ -46,4 +46,6 @@ public interface HCurvasRepositiry extends JpaRepository<HCurvas, Integer> {
 	
 	@Query(value = "SELECT COUNT(1) FROM h_curvas WHERE Fh_Date=:fecha", nativeQuery = true)
 	Integer existsByDate(@Param("fecha") String fecha);
+	
+	
 }

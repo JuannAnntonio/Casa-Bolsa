@@ -1,53 +1,40 @@
 package com.phi.proyect.controller;
 
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.GsonBuilderUtils;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.mysql.cj.protocol.FullReadInputStream;
 import com.phi.proyect.models.Caps;
 import com.phi.proyect.models.CdCurvas;
 import com.phi.proyect.models.CdInstrumento;
 import com.phi.proyect.models.Curvas;
 import com.phi.proyect.models.CurvasParametria;
 import com.phi.proyect.models.DeCapsfloor;
-import com.phi.proyect.models.DeForward;
 import com.phi.proyect.models.DeDeuda;
+import com.phi.proyect.models.DeForward;
 import com.phi.proyect.models.DeFuturos;
 import com.phi.proyect.models.DeSwap;
 import com.phi.proyect.models.FlujosCapsfloor;
-import com.phi.proyect.models.FlujosSwap;
 import com.phi.proyect.models.FlujosDeuda;
-import com.phi.proyect.models.HCurvas;
-import com.phi.proyect.models.HCurvas2;
-import com.phi.proyect.models.LimitesMercado;
-import com.phi.proyect.models.Parametros;
+import com.phi.proyect.models.FlujosSwap;
 import com.phi.proyect.models.ResponseTransfer;
 import com.phi.proyect.service.CsvService;
+import com.phi.proyect.service.FuncionesService;
 import com.phi.proyect.service.MercadoDeDerivadosService;
 import com.phi.proyect.service.ParametrosService;
-import com.phi.proyect.service.VarOperacionesMdService;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -57,6 +44,9 @@ public class CsvController {
 	private final CsvService csvService;
 	private final ParametrosService params;
 	private final MercadoDeDerivadosService deDerivadosService;
+	
+	@Autowired
+	private FuncionesService funcionesService;
 
 	public CsvController(CsvService csvService, ParametrosService params,
 			MercadoDeDerivadosService deDerivadosService) {
@@ -102,9 +92,9 @@ public class CsvController {
 		double[] array = new double[107];
 		int t = 2;
 		int cdCurva = obj.get("1").asInt();
-		List<HCurvas2> ultimo = csvService.getUltimoRegistro(cdCurva);
-		String fecha = ultimo.get(0).getFhDate();
-		int del = csvService.deleteUltimoRegistro(fecha, cdCurva);		
+//		List<HCurvas2> ultimo = csvService.getUltimoRegistro(cdCurva);
+//		String fecha = ultimo.get(0).getFhDate();
+//		int del = csvService.deleteUltimoRegistro(fecha, cdCurva);		
 
 		for (int i = 0; i < array.length; i++) {
 			String tConvert = "" + t + "";
@@ -116,11 +106,20 @@ public class CsvController {
 			t++;
 		}
 
-		String fecha2 = deDerivadosService.findValue();
-		int eliminar = csvService.deleteHcurvas(fecha2);
+		String fecha2 = obj.get("fecha").asText();//deDerivadosService.findValue();
+//		csvService.deleteHcurvas(fecha2);
+
 		String response = "Error";
 		int resp = csvService.createCurvasNuevo(array, cdCurva, fecha2);
+		
 		if (resp == 1) {
+			Date fechaFormated = null;
+			try {
+				fechaFormated = new SimpleDateFormat("yyyy-MM-dd").parse(fecha2);
+			} catch (ParseException e) { 
+				e.printStackTrace();
+			}
+			csvService.insertaLn(fecha2, funcionesService.getfechaanterior(fechaFormated, 1));
 			response = "Insertado Correctamente";
 		}
 

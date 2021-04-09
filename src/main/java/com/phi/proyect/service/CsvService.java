@@ -1,5 +1,7 @@
 package com.phi.proyect.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -273,5 +275,17 @@ public class CsvService {
 		this.HcurRepo.setSafeMode();
 		this.HcurRepo.deleteMismaFecha(fecha);
 		return 1;
+	}
+	
+
+	
+	public void insertaLn(String LnFechaUno, Date LnFechaDos) {
+		System.out.println("### insertaLn");
+		System.out.println(LnFechaUno);
+		System.out.println(LnFechaDos);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String format = formatter.format(LnFechaDos);
+		
+		this.HcurRepo.insertaLn(LnFechaUno, format);
 	}
 }
