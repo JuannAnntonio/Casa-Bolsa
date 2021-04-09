@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -15,9 +17,12 @@ public class CdMercado implements Serializable {
 
 	@Id
 	@Column(name = "ID_Mercado")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idMercado;
 	private String nombre;
 	private Integer cdActivo;
+	@Column(name = "nu_limite")
+	private Double limite;
 
 	public Integer getIdMercado() {
 		return idMercado;
@@ -41,6 +46,14 @@ public class CdMercado implements Serializable {
 
 	public void setCdActivo(Integer cdActivo) {
 		this.cdActivo = cdActivo;
+	}
+
+	public Double getLimite() {
+		return limite;
+	}
+
+	public void setLimite(Double limite) {
+		this.limite = limite;
 	}
 
 }

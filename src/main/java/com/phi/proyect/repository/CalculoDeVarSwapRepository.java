@@ -94,7 +94,7 @@ public interface CalculoDeVarSwapRepository extends JpaRepository<DatosVar, Dato
 			"    and dvar.fecha =:fecha";
 
 	@Query(value = SQL_TRANSACCIONES_VAR, nativeQuery = true)
-	List<DatosVar> findTransaccionesByMercadoAndInstrumento(@Param("idMercado") String idMercado,@Param("idInstrumento") String idInstrumento,
+	List<DatosVarProjectionEntity> findTransaccionesByMercadoAndInstrumento(@Param("idMercado") String idMercado,@Param("idInstrumento") String idInstrumento,
 			@Param("fecha") String fecha);
 
 }

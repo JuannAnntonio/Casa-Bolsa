@@ -51,8 +51,8 @@ public class DatosVarService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<DatosVar> getTransacciones(String idMercado, String idInstrumento, String fecha) {
-		List<DatosVar> productos = cdvsr.findTransaccionesByMercadoAndInstrumento(idMercado, idInstrumento, fecha);
+	public List<DatosVarProjectionEntity> getTransacciones(String idMercado, String idInstrumento, String fecha) {
+		List<DatosVarProjectionEntity> productos = cdvsr.findTransaccionesByMercadoAndInstrumento(idMercado, idInstrumento, fecha);
 		if (productos == null || productos.isEmpty()) {
 			return new ArrayList<>();
 		}

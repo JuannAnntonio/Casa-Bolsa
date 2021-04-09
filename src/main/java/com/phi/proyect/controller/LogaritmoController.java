@@ -37,12 +37,10 @@ import com.phi.proyect.service.LogaritmoService;
 import com.phi.proyect.service.MercadoDeDerivadosService;
 import com.phi.proyect.service.OperacionService;
 import com.phi.proyect.service.ValuacionesMdService;
-import com.phi.proyect.service.VarLimiteService;
 import com.phi.proyect.service.VarOperacionesMdService;
 import com.phi.proyect.service.VectorPreciosDiaService;
 import com.phi.proyect.service.VectorService;
 import com.phi.proyect.vo.MesadeDinero;
-import com.phi.proyect.vo.VarLimite;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -52,7 +50,6 @@ public class LogaritmoController {
 	private final LogaritmoService log;
 	private final VectorService vecSer;
 	private final VectorPreciosDiaService vecpds;
-	private final VarLimiteService varlimSer;
 	private final ValuacionesMdService vs;
 	private final OperacionService ops;
 	private final VarOperacionesMdService vaOpMdSer;
@@ -67,13 +64,12 @@ public class LogaritmoController {
 	private GraficaVarHistoricoService graficoService;
 
 	public LogaritmoController(LogaritmoService log, VectorService vecSer, VectorPreciosDiaService vecpds,
-			VarLimiteService varlimSer, ValuacionesMdService vs, OperacionService ops,
+			ValuacionesMdService vs, OperacionService ops,
 			VarOperacionesMdService vaOpMdSer) {
 		super();
 		this.log = log;
 		this.vecSer = vecSer;
 		this.vecpds = vecpds;
-		this.varlimSer = varlimSer;
 		this.vs = vs;
 		this.ops = ops;
 		this.vaOpMdSer = vaOpMdSer;
@@ -220,10 +216,10 @@ public class LogaritmoController {
 		fechaEnvio = "2020-05-20";
 
 		for (int i = 0; i < lista.size(); i++) {
-			List<VarLimite> lista2 = null;//TODO: corregir varlimSer.findAll(lista.get(i).getIssue());
+//			List<VarLimite> lista2 = null;//TODO: corregir varlimSer.findAll(lista.get(i).getIssue());
 			List<ValuacionesMd> lista3 = vs.findValorLibros(lista.get(i).getIssue());
 			List<VarOperacionesMd> lista4 = vaOpMdSer.findByFechaAndProducto(fechaEnvio, lista.get(i).getIssue());
-			if (lista2.size() > 0) {
+			/*if (lista2.size() > 0) {
 
 				Double valor = 0.0;
 				Double multi = 0.0;
@@ -243,8 +239,10 @@ public class LogaritmoController {
 				}
 
 				listReturn.add(new com.phi.proyect.vo.MesadeDinero(lista.get(i).getIdValmerPriceVector(),
-						lista.get(i).getIssue(), lista2.get(0).getLimite(), valor, multi, valor1, valor2, valor3));
-			}
+						lista.get(i).getIssue(), 
+						0,//lista2.get(0).getLimite(), 
+						valor, multi, valor1, valor2, valor3));
+			}*/
 		}
 		return listReturn;
 	}
@@ -259,14 +257,14 @@ public class LogaritmoController {
 		System.out.println("### fecha :" + fecha);
 		System.out.println("### tpPercentil :" + tpPercentil);
 		
-		List<VarLimite> varLimiteLista = null; //TODO: corregir varlimSer.findAll("2");
+//		List<VarLimite> varLimiteLista = null; //TODO: corregir varlimSer.findAll("2");
 		// POSICION GLOBAL -> MERCADO = 1
 		PosicionGlobalProjectionEntity posicionGlobal = datosVarService.findPosicionGlobalByFecha(fecha);
 		// PRIMERA TABLA (MERCADOS)
 		List<DatosVarProjectionEntity> mercados = datosVarService.findMercadosByFecha(fecha);
 		
 		retorno.add(graficoService.getDataChart(tpPercentil, fecha));
-		retorno.add(varLimiteLista);// si
+		retorno.add(null);// si
 		retorno.add(posicionGlobal);// si
 		retorno.add(fecha);// si
 		retorno.add(mercados);// si

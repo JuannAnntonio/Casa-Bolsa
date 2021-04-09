@@ -1,24 +1,17 @@
 package com.phi.proyect.controller;
 
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-
 import java.util.List;
-import java.util.TimeZone;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.phi.proyect.models.Divisas;
-import com.phi.proyect.models.LimitesLineas;
 import com.phi.proyect.models.OperacionesMd;
 import com.phi.proyect.models.Parametros;
 import com.phi.proyect.models.ValuacionesMd;
-import com.phi.proyect.service.LimitesLineasService;
 import com.phi.proyect.service.OperacionService;
 import com.phi.proyect.service.ParametrosService;
 import com.phi.proyect.service.ValuacionesMdService;
@@ -28,15 +21,13 @@ import com.phi.proyect.service.ValuacionesMdService;
 @RequestMapping("/semaforosalertas")
 public class ContraparteController {
 
-	private final LimitesLineasService lls;
 	private final OperacionService ops;
 	private final ParametrosService ps;
 	private final ValuacionesMdService vs;
 
-	public ContraparteController(LimitesLineasService lls, OperacionService ops, ParametrosService ps,
+	public ContraparteController(OperacionService ops, ParametrosService ps,
 			ValuacionesMdService vs) {
 		super();
-		this.lls = lls;
 		this.ops = ops;
 		this.ps = ps;
 		this.vs = vs;
@@ -48,14 +39,14 @@ public class ContraparteController {
 		com.phi.proyect.vo.LimitesLineas limite = new com.phi.proyect.vo.LimitesLineas();
 		List<com.phi.proyect.vo.LimitesLineas> listReturn = new ArrayList<com.phi.proyect.vo.LimitesLineas>();
 
-		List<LimitesLineas> lista = lls.findByStatus(tipoEnvio);
-		for (int i = 0; i < lista.size(); i++) {
-
-			float sumaLimite = limiteUtilizado(lista.get(i).getContraparte());
-
-			listReturn.add(new com.phi.proyect.vo.LimitesLineas(lista.get(i).getContraparte(), sumaLimite,
-					lista.get(i).getGlobalLimit()));
-		}
+//		List<LimitesLineas> lista = lls.findByStatus(tipoEnvio);
+//		for (int i = 0; i < lista.size(); i++) {
+//
+//			float sumaLimite = limiteUtilizado(lista.get(i).getContraparte());
+//
+//			listReturn.add(new com.phi.proyect.vo.LimitesLineas(lista.get(i).getContraparte(), sumaLimite,
+//					lista.get(i).getGlobalLimit()));
+//		}
 		return listReturn;
 	}
 	
@@ -97,7 +88,7 @@ public class ContraparteController {
 
 	}
 
-	@GetMapping(value = "listaSegundaTabla")
+	/*@GetMapping(value = "listaSegundaTabla")
 	public List<com.phi.proyect.vo.OperacionesMd> listaOperacionesMD() {
 
 		List<LimitesLineas> lista = lls.findAll();
@@ -145,6 +136,6 @@ public class ContraparteController {
 		}
 
 		return listReturn;
-	}
+	}*/
 
 }

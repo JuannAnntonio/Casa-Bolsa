@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.phi.proyect.models.LimitesLineas;
 import com.phi.proyect.models.VectorPreciosDia;
 
 public interface VectorPreciosDiaRepository extends JpaRepository<VectorPreciosDia, Integer>{
