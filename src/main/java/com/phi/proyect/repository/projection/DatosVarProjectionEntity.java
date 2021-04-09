@@ -7,6 +7,9 @@ public interface DatosVarProjectionEntity {
 	@Value("#{target.nombre}")
 	String getNombre();
 
+	@Value("#{target.limite}")
+	Double getLimite();
+	
 	@Value("#{target.cd_instrumento}")
 	String getCdInstrumento();
 

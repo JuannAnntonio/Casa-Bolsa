@@ -23,15 +23,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.phi.proyect.algoritmos.Algoritmos;
-import com.phi.proyect.models.DatosVar;
 import com.phi.proyect.models.Logaritmo;
 import com.phi.proyect.models.OperacionesMd;
 import com.phi.proyect.models.ValuacionesMd;
-import com.phi.proyect.models.VarLimite;
 import com.phi.proyect.models.VarOperacionesMd;
 import com.phi.proyect.models.Vector;
 import com.phi.proyect.models.VectorPreciosDia;
 import com.phi.proyect.repository.projection.DatosVarProjectionEntity;
+import com.phi.proyect.repository.projection.PosicionGlobalProjectionEntity;
 import com.phi.proyect.service.DatosVarService;
 import com.phi.proyect.service.GraficaVarHistoricoService;
 import com.phi.proyect.service.LogaritmoService;
@@ -43,6 +42,7 @@ import com.phi.proyect.service.VarOperacionesMdService;
 import com.phi.proyect.service.VectorPreciosDiaService;
 import com.phi.proyect.service.VectorService;
 import com.phi.proyect.vo.MesadeDinero;
+import com.phi.proyect.vo.VarLimite;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -220,7 +220,7 @@ public class LogaritmoController {
 		fechaEnvio = "2020-05-20";
 
 		for (int i = 0; i < lista.size(); i++) {
-			List<VarLimite> lista2 = varlimSer.findAll(lista.get(i).getIssue());
+			List<VarLimite> lista2 = null;//TODO: corregir varlimSer.findAll(lista.get(i).getIssue());
 			List<ValuacionesMd> lista3 = vs.findValorLibros(lista.get(i).getIssue());
 			List<VarOperacionesMd> lista4 = vaOpMdSer.findByFechaAndProducto(fechaEnvio, lista.get(i).getIssue());
 			if (lista2.size() > 0) {
@@ -259,9 +259,9 @@ public class LogaritmoController {
 		System.out.println("### fecha :" + fecha);
 		System.out.println("### tpPercentil :" + tpPercentil);
 		
-		List<VarLimite> varLimiteLista = varlimSer.findAll("2");
+		List<VarLimite> varLimiteLista = null; //TODO: corregir varlimSer.findAll("2");
 		// POSICION GLOBAL -> MERCADO = 1
-		DatosVar posicionGlobal = datosVarService.findPosicionGlobalByFecha(fecha);
+		PosicionGlobalProjectionEntity posicionGlobal = datosVarService.findPosicionGlobalByFecha(fecha);
 		// PRIMERA TABLA (MERCADOS)
 		List<DatosVarProjectionEntity> mercados = datosVarService.findMercadosByFecha(fecha);
 		

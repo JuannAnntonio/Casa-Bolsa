@@ -198,7 +198,7 @@ public class CsvService {
 	@Transactional
 	public boolean saveFlujosDeuda(FlujosDeuda flujosDeuda) {
 		FlujosDeuda save = this.flujosDeudaRepository.save(flujosDeuda);
-		PrimaryKeyFlujosDeuda pk = new PrimaryKeyFlujosDeuda(flujosDeuda.getCdTransaccion(),flujosDeuda.getNuFlujo());
+		PrimaryKeyFlujosDeuda pk = new PrimaryKeyFlujosDeuda(save.getCdTransaccion(),save.getNuFlujo());
 		return this.flujosDeudaRepository.existsById(pk);
 	}
 	

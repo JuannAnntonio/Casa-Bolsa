@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.phi.proyect.models.DatosVar;
 import com.phi.proyect.repository.CalculoDeVarSwapRepository;
 import com.phi.proyect.repository.projection.DatosVarProjectionEntity;
+import com.phi.proyect.repository.projection.PosicionGlobalProjectionEntity;
 
 @Service
 public class DatosVarService {
@@ -27,7 +28,7 @@ public class DatosVarService {
 	}
 
 	@Transactional(readOnly = true)
-	public DatosVar findPosicionGlobalByFecha(String fecha) {
+	public PosicionGlobalProjectionEntity findPosicionGlobalByFecha(String fecha) {
 		return cdvsr.findPosicionGlobalByFecha(fecha);
 	}
 

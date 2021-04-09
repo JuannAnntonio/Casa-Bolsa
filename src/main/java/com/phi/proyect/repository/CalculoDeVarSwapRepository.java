@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.phi.proyect.models.DatosVar;
 import com.phi.proyect.models.DatosVarId;
 import com.phi.proyect.repository.projection.DatosVarProjectionEntity;
+import com.phi.proyect.repository.projection.PosicionGlobalProjectionEntity;
 
 @Repository
 public interface CalculoDeVarSwapRepository extends JpaRepository<DatosVar, DatosVarId> {
@@ -54,23 +55,28 @@ public interface CalculoDeVarSwapRepository extends JpaRepository<DatosVar, Dato
 	@Query(value = "delete from datos_var where fecha =:fecha", nativeQuery = true)
 	void deleteUltimo(@Param("fecha") String fecha);
 
-	String SQL_POS_GLOBAL = "SELECT datv.* FROM datos_var datv\n"
-			+ "    JOIN cd_mercado mer ON mer.ID_Mercado = datv.cd_mercado\n"
-			+ "WHERE mer.cd_activo = 1\n and datv.cd_mercado=1\n and datv.fecha =:fecha";
+	String SQL_POS_GLOBAL = "SELECT datv.var1,datv.var2,datv.var3,datv.valuacion, mer.nu_limite\n" + 
+			"FROM datos_var datv\n" + 
+			"    JOIN cd_mercado mer ON mer.ID_Mercado = datv.cd_mercado\n" + 
+			"WHERE mer.cd_activo = 1 and datv.cd_mercado=1 and datv.fecha =:fecha";
 
 	@Query(value = SQL_POS_GLOBAL, nativeQuery = true)
-	DatosVar findPosicionGlobalByFecha(@Param("fecha") String fecha);
+	PosicionGlobalProjectionEntity findPosicionGlobalByFecha(@Param("fecha") String fecha);
 
-	String SQL_MERCADOS_VAR = "SELECT mer.nombre, datv.* FROM datos_var datv \n"
+	String SQL_MERCADOS_VAR = "SELECT mer.nombre,mer.nu_limite as limite, datv.* FROM datos_var datv \n"
 			+ "JOIN cd_mercado mer ON mer.ID_Mercado = datv.cd_mercado\n" + "WHERE datv.cd_instrumento=0 \n"
 			+ "    and datv.cd_mercado<>1\n" + " and datv.fecha =:fecha";
 
 	@Query(value = SQL_MERCADOS_VAR, nativeQuery = true)
 	List<DatosVarProjectionEntity> findByFechaMercados(@Param("fecha") String fecha);
 
-	String SQL_PRODUCTOS_VAR = "SELECT inst.nombre, dvar.* FROM datos_var dvar\n" + "JOIN cd_instrumento inst \n"
-			+ "    ON inst.ID_Instrumento = dvar.cd_instrumento\n" + "WHERE inst.cd_activo=1 \n"
-			+ "    and dvar.cd_transaccion='Portafolio' \n" + "    and dvar.cd_instrumento!=0 \n"
+	String SQL_PRODUCTOS_VAR = "SELECT dvar.*, inst.nombre,inst.nu_limite_instrumento as limite \n" + 
+			"FROM datos_var dvar\n" + 
+			"JOIN cd_instrumento inst \n" + 
+			"    ON inst.ID_Instrumento = dvar.cd_instrumento\n" + 
+			"WHERE inst.cd_activo=1 \n" + 
+			"    and dvar.cd_transaccion='Portafolio'\n" + 
+			"    and dvar.cd_instrumento!=0  \n"
 			+ "    and dvar.cd_mercado=:idMercado \n" + "    and dvar.fecha =:fecha";
 
 	@Query(value = SQL_PRODUCTOS_VAR, nativeQuery = true)
@@ -78,10 +84,13 @@ public interface CalculoDeVarSwapRepository extends JpaRepository<DatosVar, Dato
 			@Param("fecha") String fecha);
 	
 	
-	String SQL_TRANSACCIONES_VAR = "SELECT dvar.* FROM datos_var dvar\n" + 
-			"WHERE dvar.cd_mercado=:idMercado \n" + 
+	String SQL_TRANSACCIONES_VAR = "SELECT dvar.*, inst.nu_limite_transaccion as limite \n" + 
+			"FROM datos_var dvar\n" + 
+			"JOIN cd_instrumento inst \n" + 
+			"    ON inst.ID_Instrumento = dvar.cd_instrumento\n" + 
+			"WHERE dvar.cd_transaccion!='Portafolio' \n" + 
+			"    and dvar.cd_mercado=:idMercado\n" + 
 			"    and dvar.cd_instrumento=:idInstrumento \n" +
-			"    and dvar.cd_transaccion!='Portafolio' \n" +
 			"    and dvar.fecha =:fecha";
 
 	@Query(value = SQL_TRANSACCIONES_VAR, nativeQuery = true)

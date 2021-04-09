@@ -15,11 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.phi.proyect.models.LimitesLineas;
 import com.phi.proyect.models.LimitesMercado;
-import com.phi.proyect.models.VarLimite;
 import com.phi.proyect.service.LimiteMercado;
-import com.phi.proyect.service.VarLimiteService;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")

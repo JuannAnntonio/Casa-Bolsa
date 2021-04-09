@@ -1,60 +1,46 @@
 package com.phi.proyect.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.phi.proyect.models.LimitesLineas;
-import com.phi.proyect.models.LimitesMercado;
-import com.phi.proyect.models.VarLimite;
-import com.phi.proyect.repository.VarLimiteRepository;
+import com.phi.proyect.models.CdInstrumento;
+import com.phi.proyect.repository.CdInstrumentoRepository;
+import com.phi.proyect.repository.projection.LimitesLineasProjectionEntity;
 
 @Service
 @Transactional(readOnly = true)
 public class VarLimiteService {
 
 	@Autowired
-	private VarLimiteRepository varlir;
-	
-	public List<VarLimite> findAll(String producto) {
-		List<VarLimite> listVarLimite = varlir.findByProducto(producto);
+	private CdInstrumentoRepository cdIntrumentoRepo;
 
-		if(listVarLimite == null || listVarLimite.isEmpty()){
-			return new ArrayList<>();
-		}
-
-		return listVarLimite;
-		
-	}
-		
-	public List<VarLimite> findAllVar() {
-		return varlir.findAll();
-	}	
-	
-	@Transactional
-	public VarLimite findByIdVarLimiteMd(int idVarLimite) {
-		return varlir.findByIdVarLimiteMd(idVarLimite);
+	public List<LimitesLineasProjectionEntity> findAllLimitesVar() {
+		return cdIntrumentoRepo.findAllLimitesVar();
 	}
 
 	@Transactional
-	public VarLimite create(VarLimite limite) {
-		return this.varlir.save(limite);
+	public CdInstrumento create(CdInstrumento instrumento) {
+		return this.cdIntrumentoRepo.save(instrumento);
 
 	}
 
 	@Transactional
-	public VarLimite update(VarLimite limite) {
-		return this.varlir.save(limite);
+	public CdInstrumento updateInstrumento(CdInstrumento instrumento) {
+		Optional<CdInstrumento> instrumentoOption = cdIntrumentoRepo.findById(instrumento.getIdInstrumento());
+		instrumentoOption.get().setLimiteInstrumento(instrumento.getLimiteInstrumento());
+		instrumentoOption.get().setLimiteTransaccion(instrumento.getLimiteTransaccion());
+		return cdIntrumentoRepo.save(instrumentoOption.get());
 	}
-
-	
 
 	@Transactional
-	public void delete(VarLimite limite) {
-		this.varlir.delete(limite);
+	public CdInstrumento deleteLogico(Integer idInstrumento) {
+		Optional<CdInstrumento> instrumentoOption = cdIntrumentoRepo.findById(idInstrumento);
+		instrumentoOption.get().setCdActivo(0);
+		return cdIntrumentoRepo.save(instrumentoOption.get());
 	}
-	
+
 }
