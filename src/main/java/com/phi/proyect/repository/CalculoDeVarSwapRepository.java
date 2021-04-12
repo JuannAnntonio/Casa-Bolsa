@@ -84,7 +84,7 @@ public interface CalculoDeVarSwapRepository extends JpaRepository<DatosVar, Dato
 			@Param("fecha") String fecha);
 	
 	
-	String SQL_TRANSACCIONES_VAR = "SELECT dvar.*, inst.nu_limite_transaccion as limite \n" + 
+	String SQL_TRANSACCIONES_VAR = "SELECT dvar.*, inst.nombre,inst.nu_limite_transaccion as limite \n" + 
 			"FROM datos_var dvar\n" + 
 			"JOIN cd_instrumento inst \n" + 
 			"    ON inst.ID_Instrumento = dvar.cd_instrumento\n" + 

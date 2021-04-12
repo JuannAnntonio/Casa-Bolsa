@@ -40,7 +40,6 @@ import com.phi.proyect.repository.HCurvasRepositiry;
 import com.phi.proyect.repository.HCurvasRepositiry2;
 
 @Service
-@Transactional(readOnly = true)
 public class CsvService {
 
 	@Autowired
@@ -67,16 +66,27 @@ public class CsvService {
 	private DeFuturosRepository deFuturosRepo;
 	@Autowired
 	private CurvasParametriaRepository curvasParametros;
-	@Autowired 
+	@Autowired
 	private DeForwardRepository forwardRepository;
-	@Autowired 
+	@Autowired
 	private DeDeudaRepository deudaRepository;
-	@Autowired 
+	@Autowired
 	private FlujosDeudaRepository flujosDeudaRepository;
 
 	@Transactional
 	public Caps create(Caps caps) {
 		return this.csvRepo.save(caps);
+
+	}
+
+	public int existeFecha(String fecha) {
+		return curRepo.existsByDate(fecha);
+	}
+
+	@Transactional
+	public void deleteExisteFecha(String fecha) {
+		this.HcurRepo.deleteMismaFecha(fecha);
+		this.HcurRepo.deleteLnMismaFecha(fecha);
 
 	}
 
@@ -97,11 +107,6 @@ public class CsvService {
 				valores[93], valores[94], valores[95], valores[96], valores[97], valores[98], valores[99], valores[100],
 				valores[101], valores[102], valores[103], valores[104], valores[105], valores[106]);
 	}
-
-//	@Transactional
-//    public int createCurvas(HCurvas curvas) {
-//    	return this.curRepo.save2(curvas.getCdCurva(),curvas.getFhDate(),curvas.getN1(),curvas.getN2(),curvas.getN3(),curvas.getN4(),curvas.getN5(),curvas.getN6(),curvas.getN7(),curvas.getN8(),curvas.getN9(),curvas.getN10(),curvas.getN11(),curvas.getN12(),curvas.getN13(),curvas.getN14(),curvas.getN15(),curvas.getN16(),curvas.getN17(),curvas.getN18(),curvas.getN19(),curvas.getN20(),curvas.getN21(),curvas.getN22(),curvas.getN23(),curvas.getN24(),curvas.getN25(),curvas.getN26(),curvas.getN27(),curvas.getN28());    	
-//    }
 
 	public List<Curvas> findByFkCdCurva(int id) {
 		return curvasRepo.findByFkCdCurva(id);
@@ -176,7 +181,7 @@ public class CsvService {
 
 	@Transactional
 	public void deleteForward(DeForward forward) {
-		if(this.forwardRepository.existsById(forward.getCdTransaccion())) {
+		if (this.forwardRepository.existsById(forward.getCdTransaccion())) {
 			this.forwardRepository.deleteById(forward.getCdTransaccion());
 		}
 	}
@@ -186,11 +191,10 @@ public class CsvService {
 		DeDeuda save = this.deudaRepository.save(deuda);
 		return this.deudaRepository.existsById(save.getCdTransaccion());
 	}
-	
 
 	@Transactional
 	public void deleteDeuda(DeDeuda deuda) {
-		if(this.deudaRepository.existsById(deuda.getCdTransaccion())) {
+		if (this.deudaRepository.existsById(deuda.getCdTransaccion())) {
 			this.deudaRepository.deleteById(deuda.getCdTransaccion());
 		}
 	}
@@ -198,19 +202,18 @@ public class CsvService {
 	@Transactional
 	public boolean saveFlujosDeuda(FlujosDeuda flujosDeuda) {
 		FlujosDeuda save = this.flujosDeudaRepository.save(flujosDeuda);
-		PrimaryKeyFlujosDeuda pk = new PrimaryKeyFlujosDeuda(save.getCdTransaccion(),save.getNuFlujo());
+		PrimaryKeyFlujosDeuda pk = new PrimaryKeyFlujosDeuda(save.getCdTransaccion(), save.getNuFlujo());
 		return this.flujosDeudaRepository.existsById(pk);
 	}
-	
 
 	@Transactional
 	public void deleteFlujosDeuda(FlujosDeuda flujosDeuda) {
-		PrimaryKeyFlujosDeuda pk = new PrimaryKeyFlujosDeuda(flujosDeuda.getCdTransaccion(),flujosDeuda.getNuFlujo());
-		if(this.flujosDeudaRepository.existsById(pk)) {
+		PrimaryKeyFlujosDeuda pk = new PrimaryKeyFlujosDeuda(flujosDeuda.getCdTransaccion(), flujosDeuda.getNuFlujo());
+		if (this.flujosDeudaRepository.existsById(pk)) {
 			this.flujosDeudaRepository.deleteById(pk);
 		}
 	}
-	
+
 	@Transactional
 	public List<DeFuturos> findByCodigoDeTransaccion(int id) {
 		return this.deFuturosRepo.findByCodigoDeTransaccion(id);
@@ -276,16 +279,14 @@ public class CsvService {
 		this.HcurRepo.deleteMismaFecha(fecha);
 		return 1;
 	}
-	
 
-	
 	public void insertaLn(String LnFechaUno, Date LnFechaDos) {
 		System.out.println("### insertaLn");
 		System.out.println(LnFechaUno);
 		System.out.println(LnFechaDos);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String format = formatter.format(LnFechaDos);
-		
+
 		this.HcurRepo.insertaLn(LnFechaUno, format);
 	}
 }
