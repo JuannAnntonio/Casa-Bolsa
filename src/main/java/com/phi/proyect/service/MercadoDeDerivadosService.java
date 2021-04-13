@@ -10,7 +10,7 @@ import com.phi.proyect.models.DatosVar;
 import com.phi.proyect.models.Tvaluacionhoy;
 import com.phi.proyect.models.Vista;
 import com.phi.proyect.repository.CalculoDeVarSwapRepository;
-import com.phi.proyect.repository.DeSwapRepository2;
+import com.phi.proyect.repository.DeSwapRepository;
 import com.phi.proyect.repository.HCurvasRepositiry2;
 import com.phi.proyect.repository.MercadoDeDerivadosRepository;
 import com.phi.proyect.repository.TvaluacionhoyRepository;
@@ -21,7 +21,7 @@ import com.phi.proyect.repository.VistaRepository;
 public class MercadoDeDerivadosService {
 
 	@Autowired
-	private DeSwapRepository2 deSwapRepo2;
+	private DeSwapRepository deSwapRepo2;
 	@Autowired
 	private MercadoDeDerivadosRepository MercadoDeRepo;
 	@Autowired
@@ -34,7 +34,7 @@ public class MercadoDeDerivadosService {
 	private HCurvasRepositiry2 HcurRepo;
 
 	@Transactional
-	public List<com.phi.proyect.models.DeSwap2> findAllDeSwap() {
+	public List<com.phi.proyect.models.DeSwap> findAllDeSwap() {
 		return this.deSwapRepo2.findAll();
 	}
 

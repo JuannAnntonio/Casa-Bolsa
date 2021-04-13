@@ -35,7 +35,7 @@ public class MercadoDeDerivadosController {
 	private final FuncionesService fsFuncionesService;
 	private final MercadoDeDerivadosService deDerivadosService;
 	private final ParametrosService params;
-	
+
 	@Autowired
 	private VarFactoryService varFactoryService;
 
@@ -50,7 +50,7 @@ public class MercadoDeDerivadosController {
 	@RequestMapping(value = "/swaps", method = RequestMethod.POST)
 	public ResponseTransfer insertTvaluacionhoy() {
 		int resultFecha = deDerivadosService.updateFecha();
-		List<com.phi.proyect.models.DeSwap2> lista = deDerivadosService.findAllDeSwap();
+		List<com.phi.proyect.models.DeSwap> lista = deDerivadosService.findAllDeSwap();
 		List<Parametros> listaparam = params.findParametro("PORCENTAJE");
 		int porce1 = 3;
 		int porce2 = 7;
@@ -93,7 +93,7 @@ public class MercadoDeDerivadosController {
 					// fecha,lista.get(i).getNuFlotante(),porce3);
 				} else if (lista.get(i).getTpProducto() == 2) {
 					resultado = fsFuncionesService.ValSwap(lista.get(i).getCdTransaccion(),
-							lista.get(i).getNuCurvaDescuento(), lista.get(i).getNuFlotante(),fecha);
+							lista.get(i).getNuCurvaDescuento(), lista.get(i).getNuFlotante(), fecha);
 
 					result = deDerivadosService.create(new Tvaluacionhoy(lista.get(i).getCdTransaccion(), resultado, 2,
 							f, resultVar1, resultVar2, resultVar3, 200));
@@ -144,7 +144,7 @@ public class MercadoDeDerivadosController {
 		String fecha = obj.get("fecha").asText();
 		System.out.println("### fecha :" + fecha);
 
-		ResponseApp msj = varFactoryService.generarVarFactory(fecha);	
+		ResponseApp msj = varFactoryService.generarVarFactory(fecha);
 		System.out.println("### MSJ :" + msj);
 		return msj;
 	}
@@ -153,8 +153,8 @@ public class MercadoDeDerivadosController {
 	public ResponseApp existenRegistros(@RequestBody ObjectNode obj) {
 		String fecha = obj.get("fecha").asText();
 		System.out.println("### fecha :" + fecha);
-		
-		ResponseApp msj = varFactoryService.existenCurvasByDate(fecha);	
+
+		ResponseApp msj = varFactoryService.existenCurvasByDate(fecha);
 		System.out.println("### MSJ :" + msj);
 
 		return msj;

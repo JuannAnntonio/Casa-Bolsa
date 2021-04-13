@@ -33,6 +33,8 @@ public class DeSwap implements Serializable{
 	private int TpProducto;
 	private int TpTransaccion;
 	private int TpDescuento;
+	private String NbTrader;
+	private String NbContraparte;
 	
 	public DeSwap() {
 		super();
@@ -166,6 +168,23 @@ public class DeSwap implements Serializable{
 	public void setTpDescuento(int tpDescuento) {
 		TpDescuento = tpDescuento;
 	}
+
+	public String getNbTrade() {
+		return NbTrader;
+	}
+
+	public void setNbTrader(String nbTrader) {
+		NbTrader = nbTrader;
+	}
+
+	public String getNbContraparte() {
+		return NbContraparte;
+	}
+
+	public void setNbContraparte(String nbContraparte) {
+		NbContraparte = nbContraparte;
+	}
+
 
 	
 }

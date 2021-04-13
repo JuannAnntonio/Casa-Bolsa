@@ -153,24 +153,25 @@ public class CsvService {
 
 	@Transactional
 	public int saveDeSwap(DeSwap deSwap) {
-		return this.deSwapRepo.save2(deSwap.getCdTransaccion(), deSwap.getCdInstrumento(), deSwap.getFhInicio(),
-				deSwap.getFhFin(), deSwap.getNuCurvaDescuento(), deSwap.getCurvaFlot(), deSwap.getNuFija(),
-				deSwap.getNuFlotante(), deSwap.getNuNominal(), deSwap.getTcBanco(), deSwap.getTcCliente(),
-				deSwap.getCdBcoRecibe(), deSwap.getNuConvencion(), deSwap.getTpProducto(), deSwap.getTpTransaccion(),
-				deSwap.getTpDescuento());
+		Integer numRegistros = deSwapRepo.findByTransaccion(deSwap.getCdTransaccion());
+		if (numRegistros != null && numRegistros >= 1) {
+			deSwapRepo.deleteAll(deSwap.getCdTransaccion());
+		}
+		DeSwap save = deSwapRepo.save(deSwap);
+		return save != null ? 1 : 0;
 	}
 
-	@Transactional
-	public List<DeSwap> findByTransaccion(String id) {
-		return this.deSwapRepo.findByTransaccion(id);
-	}
+	
 
 	@Transactional
 	public int saveFlujosSwap(FlujosSwap flujosSwap) {
-		return this.flujosSwapRepo.save2(flujosSwap.getCdTransaccion(), flujosSwap.getNuPago(), flujosSwap.getFhPago(),
-				flujosSwap.getNuMontoPago(), flujosSwap.getNuPlazoCupon(), flujosSwap.getNuTasaVigente(),
-				flujosSwap.getCdActivo(), flujosSwap.getFhPagoB(), flujosSwap.getNuMontoPagoB(),
-				flujosSwap.getNuPlazoCuponB());
+		Integer numRegistros = flujosSwapRepo.getRegistros(flujosSwap.getCdTransaccion());
+		if (numRegistros != null && numRegistros >= 1) {
+			flujosSwapRepo.deleteAllFlujos(flujosSwap.getCdTransaccion());
+		}
+		FlujosSwap save = flujosSwapRepo.save(flujosSwap);
+		return save != null ? 1 : 0;
+
 	}
 
 	@Transactional
@@ -256,7 +257,7 @@ public class CsvService {
 	@Transactional
 	public int deleteDeSwap() {
 		this.HcurRepo.setSafeMode();
-		this.deSwapRepo.deleteAllsSwaf();
+		this.deSwapRepo.deleteAllsSwap();
 
 		return 0;
 	}

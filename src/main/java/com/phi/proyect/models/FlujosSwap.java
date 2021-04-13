@@ -2,6 +2,7 @@ package com.phi.proyect.models;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -17,12 +18,17 @@ public class FlujosSwap implements Serializable {
 	private Integer nuPago;
 	private String fhPago;
 	private Double nuMontoPago;
-	private Integer nuPlazoCupon;
-	private Double NuTasaVigente;
+	@Column(name = "Nu_Plazocupon")
+	private Integer nu_Plazocupon;
+	@Column(name = "Nu_Tasavigente")
+	private Double nu_Tasavigente;
 	private Integer cdActivo;
+	@Column(name = "Fh_Pago_B")
 	private String fhPagoB;
+	@Column(name = "Nu_Monto_Pago_B")
 	private Double nuMontoPagoB;
-	private Integer nuPlazoCuponB;
+	@Column(name = "Nu_Plazocupon_B")
+	private Integer nu_Plazocupon_B;
 
 	public String getCdTransaccion() {
 		return cdTransaccion;
@@ -56,20 +62,20 @@ public class FlujosSwap implements Serializable {
 		this.nuMontoPago = nuMontoPago;
 	}
 
-	public Integer getNuPlazoCupon() {
-		return nuPlazoCupon;
+	public Integer getNu_Plazocupon() {
+		return nu_Plazocupon;
 	}
 
-	public void setNuPlazoCupon(Integer nuPlazoCupon) {
-		this.nuPlazoCupon = nuPlazoCupon;
+	public void setNu_Plazocupon(Integer nu_PlazoCupon) {
+		this.nu_Plazocupon = nu_PlazoCupon;
 	}
 
-	public Double getNuTasaVigente() {
-		return NuTasaVigente;
+	public Double getNu_Tasavigente() {
+		return nu_Tasavigente;
 	}
 
-	public void setNuTasaVigente(Double nuTasaVigente) {
-		NuTasaVigente = nuTasaVigente;
+	public void setNu_Tasavigente(Double nu_TasaVigente) {
+		this.nu_Tasavigente = nu_TasaVigente;
 	}
 
 	public Integer getCdActivo() {
@@ -96,12 +102,12 @@ public class FlujosSwap implements Serializable {
 		this.nuMontoPagoB = nuMontoPagoB;
 	}
 
-	public Integer getNuPlazoCuponB() {
-		return nuPlazoCuponB;
+	public Integer getNu_Plazocupon_B() {
+		return nu_Plazocupon_B;
 	}
 
-	public void setNuPlazoCuponB(Integer nuPlazoCuponB) {
-		this.nuPlazoCuponB = nuPlazoCuponB;
+	public void setNu_Plazocupon_B(Integer nu_PlazoCupon_B) {
+		this.nu_Plazocupon_B = nu_PlazoCupon_B;
 	}
 
 }
