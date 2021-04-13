@@ -5,16 +5,19 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "flujos_swap")
+@IdClass(PrimaryKeyFlujosSwaps.class)
 public class FlujosSwap implements Serializable {
 
 	private static final long serialVersionUID = -2750379947678674230L;
 
 	@Id
 	private String cdTransaccion;
+	@Id
 	private Integer nuPago;
 	private String fhPago;
 	private Double nuMontoPago;

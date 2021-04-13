@@ -28,7 +28,7 @@ public interface DeSwapRepository extends JpaRepository<DeSwap, Integer> {
 	int deleteAllsSwap();
 	
 	@Modifying
-	@Query(value="delete from flujos_swap where Cd_Transaccion =:id", nativeQuery =  true)
+	@Query(value="delete from de_swap where Cd_Transaccion =:id", nativeQuery =  true)
 	void deleteAll(@Param("id") String data);
 
 	@Query(value = "select * from de_swap where Cd_Instrumento=:idInstrumento", nativeQuery = true)

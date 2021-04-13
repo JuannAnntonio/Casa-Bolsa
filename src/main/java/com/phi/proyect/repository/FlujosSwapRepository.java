@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.phi.proyect.models.FlujosSwap;
+import com.phi.proyect.models.PrimaryKeyFlujosSwaps;
 
-public interface FlujosSwapRepository extends JpaRepository<FlujosSwap, String>{
+public interface FlujosSwapRepository extends JpaRepository<FlujosSwap, PrimaryKeyFlujosSwaps>{
 	
 //	@Modifying
 //	@Query(value="INSERT INTO flujos_swap (Cd_Transaccion,Nu_Pago,Fh_Pago,Nu_Monto_Pago,Nu_PlazoCupon,Nu_TasaVigente,Cd_Activo,Fh_Pago_B,Nu_Monto_Pago_B,Nu_PlazoCupon_B) VALUES( :transaccion, :nPago, :fPago, :monto, :plazo, :tasa, :activo, :fPagoB, :nuMontoPagoB, :nuPlazoCuponB)", nativeQuery =  true)
@@ -28,6 +30,11 @@ public interface FlujosSwapRepository extends JpaRepository<FlujosSwap, String>{
 	@Modifying
 	@Query(value="delete from flujos_swap", nativeQuery =  true)
 	void deleteAllFlujos();
+
+	@Modifying
+	@Transactional
+	@Query(value = "SET SQL_SAFE_UPDATES = 0;", nativeQuery = true)
+	void setSafeMode();
 
 
 }

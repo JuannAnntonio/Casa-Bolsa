@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,7 @@ import com.phi.proyect.models.FlujosDeuda;
 import com.phi.proyect.models.FlujosSwap;
 import com.phi.proyect.models.HCurvas2;
 import com.phi.proyect.models.PrimaryKeyFlujosDeuda;
+import com.phi.proyect.models.PrimaryKeyFlujosSwaps;
 import com.phi.proyect.repository.CdCurvasRepository;
 import com.phi.proyect.repository.CdInstrumentoRepository;
 import com.phi.proyect.repository.CsvRepository;
@@ -42,6 +45,8 @@ import com.phi.proyect.repository.HCurvasRepositiry2;
 @Service
 public class CsvService {
 
+	private static final Logger log = LoggerFactory.getLogger(CsvService.class);
+	
 	@Autowired
 	private CsvRepository csvRepo;
 	@Autowired
@@ -161,17 +166,20 @@ public class CsvService {
 		return save != null ? 1 : 0;
 	}
 
-	
+	@Transactional
+	public void deleteFlujosSwap(FlujosSwap flujosSwap) {
+		PrimaryKeyFlujosSwaps pk = new PrimaryKeyFlujosSwaps();
+		pk.setCdTransaccion(flujosSwap.getCdTransaccion());
+		pk.setNuPago(flujosSwap.getNuPago());
+		if (this.flujosSwapRepo.existsById(pk)) {
+			this.flujosSwapRepo.deleteById(pk);
+		}
+	}
 
 	@Transactional
 	public int saveFlujosSwap(FlujosSwap flujosSwap) {
-		Integer numRegistros = flujosSwapRepo.getRegistros(flujosSwap.getCdTransaccion());
-		if (numRegistros != null && numRegistros >= 1) {
-			flujosSwapRepo.deleteAllFlujos(flujosSwap.getCdTransaccion());
-		}
 		FlujosSwap save = flujosSwapRepo.save(flujosSwap);
 		return save != null ? 1 : 0;
-
 	}
 
 	@Transactional

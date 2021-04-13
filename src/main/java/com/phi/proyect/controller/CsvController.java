@@ -30,7 +30,6 @@ import com.phi.proyect.models.DeSwap;
 import com.phi.proyect.models.FlujosCapsfloor;
 import com.phi.proyect.models.FlujosDeuda;
 import com.phi.proyect.models.FlujosSwap;
-import com.phi.proyect.models.HCurvas2;
 import com.phi.proyect.models.ResponseTransfer;
 import com.phi.proyect.service.CsvService;
 import com.phi.proyect.service.FuncionesService;
@@ -365,6 +364,8 @@ public class CsvController {
 			flujosSwap.setNuMontoPagoB(obj.get("8").asDouble());
 			flujosSwap.setNu_Plazocupon_B(obj.get("9").asInt());
 
+			csvService.deleteFlujosSwap(flujosSwap);
+			
 			String response = "Error";
 			int resp = csvService.saveFlujosSwap(flujosSwap);
 			if (resp == 1) {
