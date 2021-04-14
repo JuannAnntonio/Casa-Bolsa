@@ -160,6 +160,7 @@ public class CsvService {
 	public int saveDeSwap(DeSwap deSwap) {
 		Integer numRegistros = deSwapRepo.findByTransaccion(deSwap.getCdTransaccion());
 		if (numRegistros != null && numRegistros >= 1) {
+			flujosSwapRepo.deleteAllFlujos(deSwap.getCdTransaccion());
 			deSwapRepo.deleteAll(deSwap.getCdTransaccion());
 		}
 		DeSwap save = deSwapRepo.save(deSwap);
