@@ -83,18 +83,21 @@ public class CsvController {
 		return new ResponseEntity<>(this.csvService.create(caps), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/existenDotos", method = RequestMethod.POST)
+	@RequestMapping(value = "/existenDatos", method = RequestMethod.POST)
 	public ResponseEntity<Integer> Datos(@RequestBody ObjectNode obj) {
 		String laFecha = obj.get("fecha").asText();
-		return new ResponseEntity<>(csvService.existeFecha(laFecha), HttpStatus.OK);
+		Integer tipoDocto = obj.get("tipo").asInt();
+		
+		return new ResponseEntity<>(csvService.existeFecha(laFecha,tipoDocto), HttpStatus.OK);
 
 	}
 
 	@RequestMapping(value = "/deleteExisteFecha", method = RequestMethod.POST)
 	public ResponseEntity deleteExisteFecha(@RequestBody ObjectNode obj) {
-
 		String laFecha = obj.get("fecha").asText();
-		csvService.deleteExisteFecha(laFecha);
+		Integer tipoDocto = obj.get("tipo").asInt();
+		
+		csvService.deleteExisteFecha(laFecha,tipoDocto);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -262,14 +265,7 @@ public class CsvController {
 
 	@RequestMapping(value = "/deleteSwap", method = RequestMethod.POST)
 	public ResponseTransfer eliminarSwapFlujos() {
-		String response = "Error";
-		int a = csvService.deleteFlujosSwap();
-		if (a == 0) {
-			int b = csvService.deleteDeSwap();
-			if (b == 0) {
-				response = "Success";
-			}
-		}
+		String response = "Success";
 		return new ResponseTransfer(response);
 	}
 
@@ -349,9 +345,7 @@ public class CsvController {
 	@RequestMapping(value = "/flujosSwap", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseTransfer uploadFlujosSwap(@RequestBody ObjectNode obj) {
-		//csvService.deleteFlujosSwap();
-//		List<DeSwap> lista = csvService.findByTransaccion(obj.get("0").asText());
-//		if (lista.size() > 0) {
+
 			FlujosSwap flujosSwap = new FlujosSwap();
 			flujosSwap.setCdTransaccion(obj.get("0").asText());
 			flujosSwap.setNuPago(obj.get("1").asInt());
@@ -363,8 +357,6 @@ public class CsvController {
 			flujosSwap.setFhPagoB(obj.get("7").asText());
 			flujosSwap.setNuMontoPagoB(obj.get("8").asDouble());
 			flujosSwap.setNu_Plazocupon_B(obj.get("9").asInt());
-
-			csvService.deleteFlujosSwap(flujosSwap);
 			
 			String response = "Error";
 			int resp = csvService.saveFlujosSwap(flujosSwap);
@@ -372,11 +364,6 @@ public class CsvController {
 				response = "Insertado Correctamente";
 			}
 			return new ResponseTransfer(response);
-
-//		} else {
-//			return new ResponseTransfer(
-//					"No se encontro el valor " + obj.get("0").asInt() + " tiene que hacer el registro en de_swap");
-//		}
 	}
 
 	@RequestMapping(value = "/fordward", method = RequestMethod.POST)

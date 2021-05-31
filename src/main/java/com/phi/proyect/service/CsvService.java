@@ -25,7 +25,6 @@ import com.phi.proyect.models.FlujosDeuda;
 import com.phi.proyect.models.FlujosSwap;
 import com.phi.proyect.models.HCurvas2;
 import com.phi.proyect.models.PrimaryKeyFlujosDeuda;
-import com.phi.proyect.models.PrimaryKeyFlujosSwaps;
 import com.phi.proyect.repository.CdCurvasRepository;
 import com.phi.proyect.repository.CdInstrumentoRepository;
 import com.phi.proyect.repository.CsvRepository;
@@ -84,14 +83,52 @@ public class CsvService {
 
 	}
 
-	public int existeFecha(String fecha) {
-		return curRepo.existsByDate(fecha);
+	public int existeFecha(String fecha, Integer tipoDocto) {
+		int numRows =0;
+		switch(tipoDocto) {
+			case 1: //Curvas
+				numRows = curRepo.existsByDate(fecha);
+				break;
+			case 2: //Swaps
+				numRows = deSwapRepo.getNumRegistros();
+				break;
+			case 3: //Cupones de Swaps
+				numRows = flujosSwapRepo.getNumRegistros();
+				break;
+			case 4: // Fordward
+				break;
+			case 5:// Mercado de dinero
+				break;
+			case 6: //Cupones Mercado de dinero
+				break;
+			
+		}
+		
+		return numRows;
 	}
 
 	@Transactional
-	public void deleteExisteFecha(String fecha) {
-		this.HcurRepo.deleteMismaFecha(fecha);
-		this.HcurRepo.deleteLnMismaFecha(fecha);
+	public void deleteExisteFecha(String fecha, Integer tipoDocto) {
+		
+		switch(tipoDocto) {
+		case 1: //Curvas
+			this.HcurRepo.deleteMismaFecha(fecha);
+			this.HcurRepo.deleteLnMismaFecha(fecha);
+			break;
+		case 2: //Swaps
+			deSwapRepo.deleteAll();
+			break;
+		case 3: //Cupones de Swaps
+			flujosSwapRepo.deleteAll();
+			break;
+		case 4: // Fordward
+			break;
+		case 5:// Mercado de dinero
+			break;
+		case 6: //Cupones Mercado de dinero
+			break;
+		
+	}
 
 	}
 
@@ -158,24 +195,24 @@ public class CsvService {
 
 	@Transactional
 	public int saveDeSwap(DeSwap deSwap) {
-		Integer numRegistros = deSwapRepo.findByTransaccion(deSwap.getCdTransaccion());
-		if (numRegistros != null && numRegistros >= 1) {
-			flujosSwapRepo.deleteAllFlujos(deSwap.getCdTransaccion());
-			deSwapRepo.deleteAll(deSwap.getCdTransaccion());
-		}
+//		Integer numRegistros = deSwapRepo.findByTransaccion(deSwap.getCdTransaccion());
+//		if (numRegistros != null && numRegistros >= 1) {
+//			flujosSwapRepo.deleteAllFlujos(deSwap.getCdTransaccion());
+//			deSwapRepo.deleteAll(deSwap.getCdTransaccion());
+//		}
 		DeSwap save = deSwapRepo.save(deSwap);
 		return save != null ? 1 : 0;
 	}
 
-	@Transactional
-	public void deleteFlujosSwap(FlujosSwap flujosSwap) {
-		PrimaryKeyFlujosSwaps pk = new PrimaryKeyFlujosSwaps();
-		pk.setCdTransaccion(flujosSwap.getCdTransaccion());
-		pk.setNuPago(flujosSwap.getNuPago());
-		if (this.flujosSwapRepo.existsById(pk)) {
-			this.flujosSwapRepo.deleteById(pk);
-		}
-	}
+//	@Transactional
+//	public void deleteFlujosSwap(FlujosSwap flujosSwap) {
+//		PrimaryKeyFlujosSwaps pk = new PrimaryKeyFlujosSwaps();
+//		pk.setCdTransaccion(flujosSwap.getCdTransaccion());
+//		pk.setNuPago(flujosSwap.getNuPago());
+//		if (this.flujosSwapRepo.existsById(pk)) {
+//			this.flujosSwapRepo.deleteById(pk);
+//		}
+//	}
 
 	@Transactional
 	public int saveFlujosSwap(FlujosSwap flujosSwap) {
@@ -263,20 +300,6 @@ public class CsvService {
 		return this.flujosSwapRepo.getRegistros();
 	}
 
-	@Transactional
-	public int deleteDeSwap() {
-		this.HcurRepo.setSafeMode();
-		this.deSwapRepo.deleteAllsSwap();
-
-		return 0;
-	}
-
-	@Transactional
-	public int deleteFlujosSwap() {
-		this.HcurRepo.setSafeMode();
-		this.flujosSwapRepo.deleteAllFlujos();
-		return 0;
-	}
 
 	@Transactional
 	public List<CurvasParametria> getCurvasParametria() {
