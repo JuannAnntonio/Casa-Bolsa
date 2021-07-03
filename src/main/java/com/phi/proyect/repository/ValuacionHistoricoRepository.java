@@ -47,6 +47,11 @@ public interface ValuacionHistoricoRepository extends JpaRepository<ValuacionHis
 	@Procedure("InsertaBonosM")
 	void insertaBonosM(String cdTransaccion, Integer cdCurva, String ldFecha);
 	
+	@Procedure("InsertaValDivisas")
+	void insertaValDivisas(String cdTransaccion, Integer cdCurva, String ldFecha);
+	
+	
+	
 	
 	@Query(value = "select merc.Nombre as mercado, inst.Nombre as instrumento, hist.* \n" + 
 			"from valuacion_historico_var hist \n" + 

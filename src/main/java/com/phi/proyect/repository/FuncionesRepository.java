@@ -121,6 +121,20 @@ public interface FuncionesRepository extends JpaRepository<Divisas, String> {
 			@Param("fecha") String fecha,
 			@Param("nuPercentil") Integer nuPercentil);
 	
+	//Mercado Divisas
+	@Query(value = "SELECT ValDivisas(:cdTransaccion, :cdCurva, :fecha)", nativeQuery = true)
+	public Double ValDivisas(
+			@Param("cdTransaccion") String cdTransaccion,
+			@Param("cdCurva") Integer cdCurva,
+			@Param("fecha") String fecha);
+
+	@Query(value = "SELECT VaRDivisas(:cdTransaccion,:cdCurva,:fecha,:nuPercentil)", nativeQuery = true)
+	public Double VaRDivisas(
+			@Param("cdTransaccion") String cdTransaccion,
+			@Param("cdCurva") Integer cdCurva,
+			@Param("fecha") String fecha,
+			@Param("nuPercentil") Integer nuPercentil);
+	
 	
 	//Mercados
 	@Query(value = "SELECT VaLRxMercado(:cdMercado,:nuPercentil,:tipoDato)", nativeQuery = true)

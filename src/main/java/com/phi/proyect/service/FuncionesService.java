@@ -113,12 +113,22 @@ public class FuncionesService {
 		return getValue(this.fr.VaLRxMercado(cdMercado, nuPercentil, tipoDato));
 	}
 
+	
+	public Double ValDivisas(String cdTransaccion, Integer cdCurva, String fecha) {
+		return getValue(this.fr.ValDivisas(cdTransaccion,cdCurva, fecha));
+	}
+
+	public Double VaRDivisas(String cdTransaccion, Integer cdCurva, String fecha,Integer nuPercentil) {
+		return getValue(this.fr.VaRDivisas(cdTransaccion, cdCurva, fecha, nuPercentil));
+	}
+
+	
 	/**
 	 * AUX
 	 */
 	private Double getValue(Double value) {
 		if (value == null) {
-			value = new Double(0.0);
+			value = Double.valueOf(0.0);
 		}
 		return value;
 	}

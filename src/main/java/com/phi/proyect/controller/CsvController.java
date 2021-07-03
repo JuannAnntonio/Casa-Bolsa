@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.phi.proyect.model.transformer.TransformerObjectNode;
 import com.phi.proyect.models.Caps;
 import com.phi.proyect.models.CdCurvas;
 import com.phi.proyect.models.CdInstrumento;
@@ -456,13 +458,7 @@ public class CsvController {
 	@RequestMapping(value = "/flujosDeuda", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseTransfer uploadFlujosDeuda(@RequestBody ObjectNode obj) {
-		// csvService.deleteFlujosSwap();
-		// List<DeSwap> lista = csvService.findByTransaccion(obj.get("0").asText());
-		// if (lista.size() > 0) {
 		FlujosDeuda flujosDeuda = new FlujosDeuda();
-//			Cd_Transaccion,Cd_Instrumento,Fecha_Inicio,Fecha_Fin,Id_Curva_Local,Id_Curva_Foranea ,
-		// Id_Tipo_Cambio,Tc_Pactado
-		// ,Nu_Nocional,Tp_Posicion,Nu_Plazo,Nu_Acrrual,Nb_Trader,ClienteflujosSwap.setCdTransaccion(obj.get("0").asText());
 		flujosDeuda.setCdTransaccion(obj.get("0").asText());
 		flujosDeuda.setNuFlujo(obj.get("1").asInt());
 		flujosDeuda.setNuPlazo(obj.get("2").asInt());
@@ -473,17 +469,11 @@ public class CsvController {
 
 		csvService.deleteFlujosDeuda(flujosDeuda);
 		String response = "Error";
-//			int resp = ;
 		if (csvService.saveFlujosDeuda(flujosDeuda)) {
 			response = "Insertado Correctamente";
 		}
 		return new ResponseTransfer(response);
 
-		// } else {
-		// return new ResponseTransfer(
-		// "No se encontro el valor " + obj.get("0").asInt() + " tiene que hacer el
-		// registro en de_swap");
-		// }
 	}
 
 	@RequestMapping(value = "/deFuturos", method = RequestMethod.POST)
@@ -493,25 +483,25 @@ public class CsvController {
 		if (lista.size() > 0) {
 			return new ResponseTransfer("El valor " + obj.get("0").asInt() + " ya se encuentra registrado");
 		} else {
-			DeFuturos deFuturos = new DeFuturos();
-			deFuturos.setCodigoDeTransaccion(obj.get("0").asInt());
-			deFuturos.setCdInstrumento(obj.get("1").asInt());
-			deFuturos.setFechaInicio(obj.get("2").asText());
-			deFuturos.setFechaFin(obj.get("3").asText());
-			deFuturos.setUnCurvaLocal(obj.get("4").asInt());
-			deFuturos.setUnCurvaForanea(obj.get("5").asInt());
-			deFuturos.setUnCurvaIndice(obj.get("6").asInt());
-			deFuturos.setNuPactado(obj.get("7").asDouble());
-			deFuturos.setUnContratos(obj.get("8").asInt());
-			deFuturos.setUnPosicion(obj.get("9").asInt());
-			deFuturos.setUnPlazo(obj.get("10").asInt());
-			deFuturos.setConvencion(obj.get("11").asInt());
 			String response = "Error";
-			DeFuturos resp = csvService.createDeFuturos(deFuturos);
+			DeFuturos resp = csvService.createDeFuturos(TransformerObjectNode.toDeFuturos(obj));
 			if (resp.getCodigoDeTransaccion() == obj.get("0").asInt()) {
 				response = "Insertado Correctamente";
 			}
 			return new ResponseTransfer(response);
 		}
 	}
+
+	@PostMapping("/flujosDivisas")
+	@ResponseBody
+	public ResponseTransfer uploadFlujosDivisas(@RequestBody ObjectNode obj) {
+
+		String response = "Error";
+		if (csvService.saveDivisas(TransformerObjectNode.toDeDivisas(obj))) {
+			response = "Insertado Correctamente";
+		}
+		return new ResponseTransfer(response);
+
+	}
+	
 }

@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.annotations.Loader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import com.phi.proyect.models.Curvas;
 import com.phi.proyect.models.CurvasParametria;
 import com.phi.proyect.models.DeCapsfloor;
 import com.phi.proyect.models.DeDeuda;
+import com.phi.proyect.models.DeDivisas;
 import com.phi.proyect.models.DeForward;
 import com.phi.proyect.models.DeFuturos;
 import com.phi.proyect.models.DeSwap;
@@ -32,6 +34,7 @@ import com.phi.proyect.repository.CurvasParametriaRepository;
 import com.phi.proyect.repository.CurvasRepository;
 import com.phi.proyect.repository.DeCapsfloorRepository;
 import com.phi.proyect.repository.DeDeudaRepository;
+import com.phi.proyect.repository.DeDivisasRepository;
 import com.phi.proyect.repository.DeForwardRepository;
 import com.phi.proyect.repository.DeFuturosRepository;
 import com.phi.proyect.repository.DeSwapRepository;
@@ -76,6 +79,8 @@ public class CsvService {
 	private DeDeudaRepository deudaRepository;
 	@Autowired
 	private FlujosDeudaRepository flujosDeudaRepository;
+	@Autowired
+	private DeDivisasRepository divisasRepository;
 
 	@Transactional
 	public Caps create(Caps caps) {
@@ -101,6 +106,9 @@ public class CsvService {
 				break;
 			case 6: //Cupones Mercado de dinero
 				break;
+			case 7: //Mercado de divisas
+				numRows = divisasRepository.getNumRegistros();
+				break;
 			
 		}
 		
@@ -116,6 +124,7 @@ public class CsvService {
 			this.HcurRepo.deleteLnMismaFecha(fecha);
 			break;
 		case 2: //Swaps
+			flujosSwapRepo.deleteAll();
 			deSwapRepo.deleteAll();
 			break;
 		case 3: //Cupones de Swaps
@@ -126,6 +135,9 @@ public class CsvService {
 		case 5:// Mercado de dinero
 			break;
 		case 6: //Cupones Mercado de dinero
+			break;
+		case 7: //Mercado de divisas
+			divisasRepository.deleteAll();
 			break;
 		
 	}
@@ -234,9 +246,9 @@ public class CsvService {
 	}
 
 	@Transactional
-	public boolean saveDeuda(DeDeuda deuda) {
-		DeDeuda save = this.deudaRepository.save(deuda);
-		return this.deudaRepository.existsById(save.getCdTransaccion());
+	public boolean saveDivisas(DeDivisas divisa) {
+		DeDivisas save = this.divisasRepository.save(divisa);
+		return this.divisasRepository.existsById(save.getCdTransaccion());
 	}
 
 	@Transactional
@@ -259,6 +271,12 @@ public class CsvService {
 		if (this.flujosDeudaRepository.existsById(pk)) {
 			this.flujosDeudaRepository.deleteById(pk);
 		}
+	}
+	
+	@Transactional
+	public boolean saveDeuda(DeDeuda deuda) {
+		DeDeuda save = this.deudaRepository.save(deuda);
+		return this.deudaRepository.existsById(save.getCdTransaccion());
 	}
 
 	@Transactional
@@ -314,9 +332,9 @@ public class CsvService {
 	}
 
 	public void insertaLn(String LnFechaUno, Date LnFechaDos) {
-		System.out.println("### insertaLn");
-		System.out.println(LnFechaUno);
-		System.out.println(LnFechaDos);
+		log.info("### insertaLn");
+		log.info(LnFechaUno);
+		log.info(""+LnFechaDos);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String format = formatter.format(LnFechaDos);
 

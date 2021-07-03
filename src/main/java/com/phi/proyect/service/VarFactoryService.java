@@ -12,6 +12,7 @@ import com.phi.proyect.models.CdInstrumento;
 import com.phi.proyect.models.CdMercado;
 import com.phi.proyect.models.DatosVar;
 import com.phi.proyect.models.DeDeuda;
+import com.phi.proyect.models.DeDivisas;
 import com.phi.proyect.models.DeForward;
 import com.phi.proyect.models.DeSwap;
 import com.phi.proyect.models.Parametros;
@@ -40,6 +41,8 @@ public class VarFactoryService {
 	private DeDeudaService deDeudaService;
 	@Autowired
 	private DeForwardRepository deForwardRepository;
+	@Autowired
+	private DeDivisasService divisasService;
 	@Autowired
 	private CdMercadoRepository cdMercadoRepository;
 	@Autowired
@@ -120,6 +123,8 @@ public class VarFactoryService {
 				executeBondesD(instrumento);
 			} else if (InstrumentoEnum.BONOS_M.getId().equals(instrumento.getIdInstrumento())) {
 				executeBonosM(instrumento);
+			} else if (isMercadoDivisas(instrumento.getIdInstrumento())) {
+				executeMercadoDivisas(instrumento);
 			}
 
 		}
@@ -135,6 +140,15 @@ public class VarFactoryService {
 		return new ResponseApp(HttpStatus.OK, "SUCCESS");
 	}
 
+	
+
+	private boolean isMercadoDivisas(Integer instrumento) {
+		return InstrumentoEnum.USD_MXP.getId().equals(instrumento)
+				|| InstrumentoEnum.EUR_MXP.getId().equals(instrumento)
+				|| InstrumentoEnum.EUR_USD.getId().equals(instrumento)
+				|| InstrumentoEnum.GBP_MXP.getId().equals(instrumento);
+	}
+	
 	private void insertMercado(CdMercado mercado) {
 		Double valuacion = fsFuncionesService.VaLRxMercado(mercado.getIdMercado(), 1, 1);
 		Double var1 = fsFuncionesService.VaLRxMercado(mercado.getIdMercado(), porce1, 2);
@@ -219,7 +233,6 @@ public class VarFactoryService {
 		insertInstrumento(instrumento.getIdInstrumento(), MercadoEnum.Mercado_Dinero);
 	}
 
-	// valForward, varForward
 	private void executeForward(CdInstrumento instrumento) {
 		for (DeForward forward : deForwardRepository.findAll()) {
 
@@ -243,8 +256,6 @@ public class VarFactoryService {
 
 	}
 
-	// ValBondes, VaRBondes
-	// deuda.getCdCurva() es cdMercado??
 	private void executeBondesD(CdInstrumento instrumento) {
 		for (DeDeuda deuda : deDeudaService.findBondesD()) {
 			Double valuacion = fsFuncionesService.ValBondes(deuda.getCdTransaccion());
@@ -262,6 +273,22 @@ public class VarFactoryService {
 					deuda.getCdCurva(), fecha);// TODO:deuda.getCdCurva() es cdMercado??
 		}
 		insertInstrumento(instrumento.getIdInstrumento(), MercadoEnum.Mercado_Dinero);
+	}
+	
+	private void executeMercadoDivisas(CdInstrumento instrumento) {
+		for (DeDivisas deuda : divisasService.findDivisasVarFactory(instrumento.getIdInstrumento())) {
+
+			Double valuacion = fsFuncionesService.ValDivisas(deuda.getCdTransaccion(), deuda.getCdCurva(), fecha);
+			Double var1 = fsFuncionesService.VaRDivisas(deuda.getCdTransaccion(), deuda.getCdCurva(), fecha, porce1);
+			Double var2 = fsFuncionesService.VaRDivisas(deuda.getCdTransaccion(), deuda.getCdCurva(), fecha, porce2);
+			Double var3 = fsFuncionesService.VaRDivisas(deuda.getCdTransaccion(), deuda.getCdCurva(), fecha, porce3);
+
+			deDerivadosService.saveDatosVar(new DatosVar(instrumento.getIdInstrumento(), deuda.getCdTransaccion(),
+					MercadoEnum.Mercado_Divisas.getId(), usuario, fecha, var1, var2, var3, valuacion));
+
+			valuacionHistoricoRepository.insertaValDivisas(deuda.getCdTransaccion(), deuda.getCdCurva(), fecha);
+		}
+		insertInstrumento(instrumento.getIdInstrumento(), MercadoEnum.Mercado_Divisas);
 	}
 
 	/**
